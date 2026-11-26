@@ -38,8 +38,14 @@ RE_X = re.compile(r"\\X\\([0-9A-Fa-f]{2})")
 def _instructions(texte):
     """Découpe la section DATA en instructions terminées par « ; » hors des chaînes."""
     debut = texte.find("DATA;")
-    if not texte.lstrip().startswith("ISO-10303-21") or debut < 0 or "END-ISO-10303-21" not in texte:
-        raise ErreurIFC("fichier IFC illisible : en-tête ou fin de fichier absent (fichier tronqué ?)")
+    if (
+        not texte.lstrip().startswith("ISO-10303-21")
+        or debut < 0
+        or "END-ISO-10303-21" not in texte
+    ):
+        raise ErreurIFC(
+            "fichier IFC illisible : en-tête ou fin de fichier absent (fichier tronqué ?)"
+        )
     courant, dans_chaine = [], False
     for c in texte[debut + 5 :]:
         if c == "'":
@@ -78,7 +84,12 @@ def _texte(valeur):
     if not (valeur.startswith("'") and valeur.endswith("'")):
         return ""
     s = valeur[1:-1].replace("''", "'")
-    s = RE_X2.sub(lambda m: "".join(chr(int(m.group(1)[i : i + 4], 16)) for i in range(0, len(m.group(1)), 4)), s)
+    s = RE_X2.sub(
+        lambda m: "".join(
+            chr(int(m.group(1)[i : i + 4], 16)) for i in range(0, len(m.group(1)), 4)
+        ),
+        s,
+    )
     return RE_X.sub(lambda m: bytes([int(m.group(1), 16)]).decode("latin-1"), s)
 
 
@@ -117,9 +128,14 @@ def espaces_ifc(texte, espaces_max=2000):
         if type_ == "IFCSPACE":
             a = _arguments(corps)
             nom = _texte(a[7]) if len(a) > 7 else ""
-            espaces[num] = {"code": _texte(a[2]), "nom": nom or (_texte(a[3]) if len(a) > 3 else "")}
+            espaces[num] = {
+                "code": _texte(a[2]),
+                "nom": nom or (_texte(a[3]) if len(a) > 3 else ""),
+            }
     if len(espaces) > espaces_max:
-        raise ErreurIFC(f"maquette trop volumineuse : {len(espaces)} espaces (limite {espaces_max})")
+        raise ErreurIFC(
+            f"maquette trop volumineuse : {len(espaces)} espaces (limite {espaces_max})"
+        )
     for type_, corps in entites.values():
         if type_ != "IFCRELDEFINESBYPROPERTIES":
             continue
@@ -203,7 +219,9 @@ class Filter:
                         espaces = espaces_ifc(flux.read(), self.valves.espaces_max)
                     tableau = tableau_markdown(espaces)
                     _ajouter_au_message(
-                        body, f"Tableau des espaces extrait de {nom} ({len(espaces)} espaces) :\n{tableau}"
+                        body,
+                        f"Tableau des espaces extrait de {nom} ({len(espaces)} espaces) :\n"
+                        f"{tableau}",
                     )
                     await emettre(
                         {
@@ -217,7 +235,13 @@ class Filter:
                     )
                 except (ErreurIFC, OSError) as erreur:
                     await emettre(
-                        {"type": "status", "data": {"description": f"Conversion IFC impossible : {erreur}", "done": True}}
+                        {
+                            "type": "status",
+                            "data": {
+                                "description": f"Conversion IFC impossible : {erreur}",
+                                "done": True,
+                            },
+                        }
                     )
                 continue  # jamais de STEP brut envoyé au modèle
             if nom.lower().endswith(".pdf"):

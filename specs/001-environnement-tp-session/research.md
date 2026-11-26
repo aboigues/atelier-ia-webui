@@ -263,3 +263,22 @@ l'origine du site (point D1 de l'analyse, FR-012).
   exemple de contrôle humain, ou à retravailler par la consigne.
 - PDF de plan vectoriel : 0 caractère extrait, l'avertissement « exporter en PNG » est transmis
   et le modèle ne décrit pas un contenu qu'il ne voit pas.
+
+### Session hébergée et purge (T025 à T041)
+
+- Infrastructure écrite d'après le schéma officiel du fournisseur `scaleway/scaleway` v2.93.0
+  (`tofu providers schema`), verrou `.terraform.lock.hcl` versionné ; `tofu validate`, TFLint,
+  Trivy et les politiques du projet au vert.
+- **Écart au plan : Ubuntu 26.04 LTS** (`ubuntu_resolute`, dernière LTS disponible chez Scaleway,
+  principe V) au lieu de 24.04 ; dépôt Docker disponible pour 26.04, versions figées
+  `docker-ce` 29.10.1 et `docker-compose-plugin` 5.8.0, clé du dépôt vérifiée par son empreinte
+  (`9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88`).
+- Accès : lien d'accès secret (`/acces/<jeton>`) qui pose un cookie `HttpOnly`, `Secure`,
+  `SameSite=Lax` (Strict perdrait le cookie après un lien ouvert depuis une messagerie) ;
+  en-tête `Content-Security-Policy` limité à l'origine du site.
+- Inventaire de purge : toutes les ressources sont listées puis filtrées localement par étiquette
+  ou par nom (aucun filtre côté serveur qui, mal interprété, ferait croire à une purge complète).
+- `atelier session cout` : 32,62 EUR pour 10 participants (instance 3,08 ; IP 0,29 ; modèle
+  29,25). `verifier-purge`, `statut` et `cout` vérifiés sans rien créer.
+- Contrôle local complet (`controles-locaux.sh`, `sca` avec les images d'Open WebUI et de Caddy) :
+  12 min 32 s au total pour les cinq contrôles ; `sca` au vert grâce aux exceptions datées.

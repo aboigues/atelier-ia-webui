@@ -40,7 +40,7 @@ def url_api_modeles():
 
 
 def modeles_disponibles():
-    requete = urllib.request.Request(
+    requete = urllib.request.Request(  # noqa: S310 (URL https fixe de Scaleway)
         url_api_modeles() + "/models", headers={"Authorization": f"Bearer {cle_secrete()}"}
     )
     with urllib.request.urlopen(requete, timeout=30) as reponse:  # noqa: S310 (URL https fixe)
@@ -59,20 +59,26 @@ def prix_horaire(type_instance, zone="fr-par-1"):
 
 
 def inventaire(session_id):
-    """Ressources restantes portant l'étiquette atelier-session=<id> (ou rattachées à la session)."""
-    tag = f"{ETIQUETTE}={session_id}"
+    """Ressources restantes de la session : étiquette atelier-session=<id> ou nom atelier-<id>.
+
+    Tout est listé puis filtré ici, sans filtre côté serveur : un filtre mal interprété
+    renverrait une liste vide et ferait croire à une purge complète.
+    """
+    tag, nom = f"{ETIQUETTE}={session_id}", f"atelier-{session_id}"
     restes = []
     for type_, args in (
-        ("instance", ("instance", "server", "list", f"tags.0={tag}", "zone=fr-par-1")),
+        ("instance", ("instance", "server", "list", "zone=fr-par-1")),
         ("volume", ("block", "volume", "list", "zone=fr-par-1")),
-        ("ip", ("instance", "ip", "list", f"tags.0={tag}", "zone=fr-par-1")),
+        ("volume local", ("instance", "volume", "list", "zone=fr-par-1")),
+        ("ip", ("instance", "ip", "list", "zone=fr-par-1")),
         ("groupe de sécurité", ("instance", "security-group", "list", "zone=fr-par-1")),
-        ("application IAM", ("iam", "application", "list", f"name=atelier-{session_id}")),
+        ("application IAM", ("iam", "application", "list")),
+        ("politique IAM", ("iam", "policy", "list")),
     ):
         for r in _scw(*args) or []:
-            if type_ in ("volume", "groupe de sécurité") and tag not in (r.get("tags") or []):
-                continue
-            restes.append((type_, r.get("id"), r.get("name")))
-    for r in _scw("dns", "record", "list", ZONE_DNS, f"name={session_id}") or []:
-        restes.append(("enregistrement DNS", r.get("id"), r.get("name")))
+            if tag in (r.get("tags") or []) or r.get("name") == nom:
+                restes.append((type_, r.get("id"), r.get("name") or r.get("address")))
+    for r in _scw("dns", "record", "list", ZONE_DNS) or []:
+        if r.get("name") == session_id:
+            restes.append(("enregistrement DNS", r.get("id"), r.get("name")))
     return restes

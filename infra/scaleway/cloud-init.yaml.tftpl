@@ -1,0 +1,73 @@
+#cloud-config
+# Instance d'une session (research.md R7, R9) : Docker depuis le dépôt officiel (clé vérifiée par
+# son empreinte, versions figées), Open WebUI et Caddy par empreinte (openwebui/compose.yaml),
+# secrets dans un fichier 0600, garde-fou à l'échéance. Aucun accès SSH (groupe de sécurité).
+
+package_update: true
+package_upgrade: true
+packages:
+  - ca-certificates
+  - curl
+  - gnupg
+
+write_files:
+  - path: /opt/atelier/compose.yaml
+    encoding: b64
+    content: ${compose_b64}
+  - path: /opt/atelier/env.commun
+    encoding: b64
+    content: ${env_commun_b64}
+  - path: /opt/atelier/Caddyfile
+    encoding: b64
+    content: ${caddyfile_b64}
+  - path: /opt/atelier/secrets.env
+    permissions: "0600"
+    content: |
+      OPENAI_API_BASE_URL=${url_api}
+      OPENAI_API_KEY=${cle_api}
+      WEBUI_SECRET_KEY=${webui_secret_key}
+      WEBUI_ADMIN_EMAIL=${formateur_courriel}
+      WEBUI_ADMIN_PASSWORD=${formateur_mdp}
+      WEBUI_URL=https://${site}
+      SITE=${site}
+      ACCES_JETON=${acces_jeton}
+  - path: /usr/local/sbin/atelier-garde-fou
+    permissions: "0700"
+    content: |
+      #!/bin/sh
+      # Échéance atteinte : arrêt, effacement des données, extinction (data-model.md).
+      cd /opt/atelier && docker compose -p atelier-ia --env-file secrets.env -f compose.yaml --profile session down --volumes
+      shred -u /opt/atelier/secrets.env
+      shutdown -h now
+  - path: /etc/systemd/system/atelier-garde-fou.service
+    content: |
+      [Unit]
+      Description=Garde-fou de fin de session de l'atelier
+      [Service]
+      Type=oneshot
+      ExecStart=/usr/local/sbin/atelier-garde-fou
+  - path: /etc/systemd/system/atelier-garde-fou.timer
+    content: |
+      [Unit]
+      Description=Échéance du garde-fou (${echeance})
+      [Timer]
+      OnCalendar=${replace(replace(echeance, "T", " "), "Z", " UTC")}
+      Persistent=true
+      [Install]
+      WantedBy=timers.target
+
+runcmd:
+  - install -m 0755 -d /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  - |
+    empreinte=$(gpg --show-keys --with-colons /etc/apt/keyrings/docker.asc | awk -F: '/^fpr/ {print $10; exit}')
+    if [ "$empreinte" != "9DC858229FC7DD38854AE2D88D81803C0EBFCD88" ]; then
+      echo "Clé du dépôt Docker inattendue : $empreinte" >&2; exit 1
+    fi
+  - echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu resolute stable" > /etc/apt/sources.list.d/docker.list
+  - apt-get update
+  - apt-get install -y docker-ce=5:29.10.1-1~ubuntu.26.04~resolute docker-ce-cli=5:29.10.1-1~ubuntu.26.04~resolute containerd.io docker-compose-plugin=5.8.0-1~ubuntu.26.04~resolute
+  - systemctl enable --now docker
+  - cd /opt/atelier && docker compose -p atelier-ia --env-file secrets.env -f compose.yaml --profile session up -d
+  - systemctl daemon-reload
+  - systemctl enable --now atelier-garde-fou.timer

@@ -31,7 +31,11 @@ def identifiants_locaux(dossier=DOSSIER_LOCAL):
     """Génère au premier appel, puis relit, le compte formateur et le secret de session locaux."""
     fichier = Path(dossier) / "identifiants.txt"
     if fichier.exists():
-        champs = dict(l.split("=", 1) for l in fichier.read_text(encoding="utf-8").splitlines() if "=" in l)
+        champs = dict(
+            ligne.split("=", 1)
+            for ligne in fichier.read_text(encoding="utf-8").splitlines()
+            if "=" in ligne
+        )
         return {k: champs[k] for k in ("courriel", "mot_de_passe", "secret")}
     Path(dossier).mkdir(parents=True, exist_ok=True)
     os.chmod(dossier, 0o700)
@@ -87,7 +91,10 @@ def demarrer(args):
     print("Configuration (connexion Scaleway, modèles, filtre IFC, consignes)...")
     openwebui.configurer(client, f"https://api.scaleway.ai/{projet}/v1", cle)
     print(f"\nPrêt : {ADRESSE}")
-    print(f"Compte formateur : {ident['courriel']} (mot de passe dans sessions/local/identifiants.txt)")
+    print(
+        f"Compte formateur : {ident['courriel']} "
+        "(mot de passe dans sessions/local/identifiants.txt)"
+    )
     print(
         "Rappel : tout document déposé reste dans le volume Docker local jusqu'à "
         "`atelier local arreter --effacer`."

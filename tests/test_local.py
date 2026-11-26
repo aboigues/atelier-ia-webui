@@ -14,7 +14,11 @@ from atelier import local  # noqa: E402
 
 class TestEnvironnement(unittest.TestCase):
     def test_variables_et_secrets_passes_par_l_environnement(self):
-        ident = {"courriel": "formateur@local.atelier", "mot_de_passe": "m" * 24, "secret": "s" * 43}
+        ident = {
+            "courriel": "formateur@local.atelier",
+            "mot_de_passe": "m" * 24,
+            "secret": "s" * 43,
+        }
         env = local.environnement("cle-scaleway", "projet-1", ident, base={"PATH": "/usr/bin"})
         self.assertEqual(env["OPENAI_API_KEY"], "cle-scaleway")
         self.assertEqual(env["OPENAI_API_BASE_URL"], "https://api.scaleway.ai/projet-1/v1")

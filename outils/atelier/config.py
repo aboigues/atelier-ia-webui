@@ -83,9 +83,7 @@ def lire_session(dossier):
     if brut["fin"] - brut["debut"] > DUREE_MAX:
         raise ErreurConfig("session.toml : la session dépasse 7 jours")
     options = {
-        k: brut[k]
-        for k in ("type_instance", "modele_reference", "modele_secours")
-        if k in brut
+        k: brut[k] for k in ("type_instance", "modele_reference", "modele_secours") if k in brut
     }
     return Session(brut["id"], str(brut["client"]), brut["debut"], brut["fin"], **options)
 

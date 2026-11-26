@@ -36,7 +36,8 @@ formations IA de Telemach Learning. Principes non négociables : `.specify/memor
 Cycle par fonctionnalité : `/speckit-specify` -> `/speckit-clarify` (si besoin) ->
 `/speckit-plan` -> `/speckit-tasks` -> `/speckit-analyze` -> `/speckit-implement`.
 Fonctionnalités : `specs/002-chaine-controle-securite/` en service (reste T040, démonstration lancée par Alexandre),
-puis `specs/001-environnement-tp-session/` (tâches générées, implémentation à faire).
+puis `specs/001-environnement-tp-session/` (US1 à US4 implémentées ; session réelle de
+répétition à lancer avec l'accord d'Alexandre : T037, T042, T043).
 
 ## Contexte
 

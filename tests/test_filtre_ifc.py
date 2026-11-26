@@ -9,7 +9,9 @@ import unittest
 from pathlib import Path
 
 RACINE = Path(__file__).resolve().parents[1]
-_spec = importlib.util.spec_from_file_location("filtre_ifc", RACINE / "openwebui/fonctions/filtre_ifc.py")
+_spec = importlib.util.spec_from_file_location(
+    "filtre_ifc", RACINE / "openwebui/fonctions/filtre_ifc.py"
+)
 fi = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(fi)
 
@@ -19,12 +21,15 @@ MAQUETTE = (RACINE / "exemples/bloc-operatoire/maquette-bloc.ifc").read_text(enc
 def ifc(entites, schema="IFC4"):
     return (
         "ISO-10303-21;\nHEADER;\nFILE_DESCRIPTION((''),'2;1');\n"
-        f"FILE_SCHEMA(('{schema}'));\nENDSEC;\nDATA;\n" + "\n".join(entites) + "\nENDSEC;\nEND-ISO-10303-21;\n"
+        f"FILE_SCHEMA(('{schema}'));\nENDSEC;\nDATA;\n"
+        + "\n".join(entites)
+        + "\nENDSEC;\nEND-ISO-10303-21;\n"
     )
 
 
 ESPACE = [
-    "#1=IFCSPACE('g1',$,'B02','Bloc',$,$,$,'Salle d''op\\X2\\00E9\\X0\\ration',.ELEMENT.,.INTERNAL.,$);",
+    "#1=IFCSPACE('g1',$,'B02','Bloc',$,$,$,"
+    "'Salle d''op\\X2\\00E9\\X0\\ration',.ELEMENT.,.INTERNAL.,$);",
     "#2=IFCPROPERTYSINGLEVALUE('PlafondSoufflant',$,IFCBOOLEAN(.F.),$);",
     "#3=IFCPROPERTYSINGLEVALUE('SurpressionPa',$,IFCREAL(15.),$);",
     "#4=IFCPROPERTYSET('p1',$,'Pset',$,(#2,#3));",
@@ -60,7 +65,7 @@ class TestEspaces(unittest.TestCase):
     def test_propriete_absente_vide(self):
         entites = ESPACE + ["#6=IFCSPACE('g2',$,'B01','Couloir',$,$,$,$,.ELEMENT.,.INTERNAL.,$);"]
         tableau = fi.tableau_markdown(fi.espaces_ifc(ifc(entites)))
-        ligne_b01 = next(l for l in tableau.splitlines() if l.startswith("| B01"))
+        ligne_b01 = next(x for x in tableau.splitlines() if x.startswith("| B01"))
         self.assertIn("|  |", ligne_b01)
 
     def test_fichier_tronque(self):
@@ -73,15 +78,18 @@ class TestEspaces(unittest.TestCase):
 
     def test_trop_d_espaces(self):
         entites = [
-            f"#{i}=IFCSPACE('g{i}',$,'S{i}','N',$,$,$,$,.ELEMENT.,.INTERNAL.,$);" for i in range(1, 2003)
+            f"#{i}=IFCSPACE('g{i}',$,'S{i}','N',$,$,$,$,.ELEMENT.,.INTERNAL.,$);"
+            for i in range(1, 2003)
         ]
         with self.assertRaises(fi.ErreurIFC) as ctx:
             fi.espaces_ifc(ifc(entites), espaces_max=2000)
         self.assertIn("2002", str(ctx.exception))
 
     def test_maquette_volumineuse(self):
-        """Une maquette de plusieurs dizaines de Mo est convertie en un temps raisonnable (AS 2.3)."""
-        remplissage = [f"#{100000 + i}=IFCCARTESIANPOINT(({i}.,{i}.,0.));" for i in range(1_200_000)]
+        """Maquette de plusieurs dizaines de Mo convertie en un temps raisonnable (AS 2.3)."""
+        remplissage = [
+            f"#{100000 + i}=IFCCARTESIANPOINT(({i}.,{i}.,0.));" for i in range(1_200_000)
+        ]
         espaces = [
             f"#{i}=IFCSPACE('g{i}',$,'S{i:04d}','Local {i}',$,$,$,$,.ELEMENT.,.INTERNAL.,$);"
             for i in range(1, 1501)
@@ -143,7 +151,10 @@ class TestInlet(unittest.TestCase):
             return dossier / "m.ifc", ""
 
         filtre._fichier = lire
-        body = {"messages": [{"role": "user", "content": "?"}], "files": [{"id": "f1", "name": "x.ifc"}]}
+        body = {
+            "messages": [{"role": "user", "content": "?"}],
+            "files": [{"id": "f1", "name": "x.ifc"}],
+        }
         resultat = asyncio.run(filtre.inlet(body, __event_emitter__=emetteur))
         self.assertEqual(resultat["files"], [])
         self.assertTrue(any("Conversion IFC impossible" in str(e) for e in evenements))

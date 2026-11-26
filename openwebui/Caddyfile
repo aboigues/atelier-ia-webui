@@ -1,0 +1,38 @@
+# Caddy de la session hébergée (research.md R7, R13) : HTTPS automatique, lien d'accès secret
+# devant Open WebUI (exposition réduite, décision d'Alexandre du 2026-11-26), en-têtes de
+# sécurité, aucune ressource tierce autorisée par le navigateur (FR-012).
+
+{$SITE} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' wss://{$SITE}; media-src 'self' blob:; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+		-Server
+	}
+
+	# Lien d'accès de la fiche : pose le cookie, puis renvoie vers l'accueil.
+	@entree path /acces/{$ACCES_JETON}
+	handle @entree {
+		header Set-Cookie "atelier_acces={$ACCES_JETON}; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=604800"
+		redir / 302
+	}
+
+	@autorise header Cookie *atelier_acces={$ACCES_JETON}*
+	handle @autorise {
+		reverse_proxy openwebui:8080
+	}
+
+	handle {
+		respond "Accès réservé aux participants de l'atelier : ouvrez le lien d'accès de votre fiche." 403
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

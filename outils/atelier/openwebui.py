@@ -34,7 +34,11 @@ class Client:
         self.cookie = cookie
 
     def requete(self, methode, chemin, corps=None, brut=None, entetes=None):
-        donnees = brut if brut is not None else (json.dumps(corps).encode() if corps is not None else None)
+        donnees = (
+            brut
+            if brut is not None
+            else (json.dumps(corps).encode() if corps is not None else None)
+        )
         en_tetes = {"Accept": "application/json"}
         if corps is not None:
             en_tetes["Content-Type"] = "application/json"
@@ -43,7 +47,9 @@ class Client:
         if self.cookie:
             en_tetes["Cookie"] = self.cookie
         en_tetes.update(entetes or {})
-        req = urllib.request.Request(self.base + chemin, data=donnees, headers=en_tetes, method=methode)
+        req = urllib.request.Request(  # noqa: S310 (adresse fixée par atelier)
+            self.base + chemin, data=donnees, headers=en_tetes, method=methode
+        )
         try:
             with urllib.request.urlopen(req, timeout=self.delai) as reponse:  # noqa: S310
                 texte = reponse.read().decode("utf-8")
@@ -53,7 +59,9 @@ class Client:
                 detail = json.loads(detail).get("detail", detail)
             except (json.JSONDecodeError, AttributeError):
                 pass
-            raise ErreurOpenWebUI(f"{methode} {chemin} : HTTP {erreur.code} : {detail}", erreur.code) from None
+            raise ErreurOpenWebUI(
+                f"{methode} {chemin} : HTTP {erreur.code} : {detail}", erreur.code
+            ) from None
         except (urllib.error.URLError, TimeoutError, ConnectionError) as erreur:
             raise ErreurOpenWebUI(f"{methode} {chemin} : injoignable ({erreur})") from None
         return json.loads(texte) if texte.strip() else None
@@ -83,7 +91,9 @@ class Client:
         """Connexion ; Open WebUI limite les connexions par minute : attente croissante sur 429."""
         for essai in range(tentatives):
             try:
-                reponse = self.post("/api/v1/auths/signin", {"email": courriel, "password": mot_de_passe})
+                reponse = self.post(
+                    "/api/v1/auths/signin", {"email": courriel, "password": mot_de_passe}
+                )
                 break
             except ErreurOpenWebUI as erreur:
                 if erreur.code != 429 or essai == tentatives - 1:
@@ -111,7 +121,12 @@ def configurer_connexion(client, url_api, cle, modeles):
 
 def assurer_fonction(client, ident, nom, contenu, description=""):
     """Appel 2 : crée ou met à jour une fonction, puis l'active."""
-    formulaire = {"id": ident, "name": nom, "content": contenu, "meta": {"description": description}}
+    formulaire = {
+        "id": ident,
+        "name": nom,
+        "content": contenu,
+        "meta": {"description": description},
+    }
     try:
         existante = client.get(f"/api/v1/functions/id/{ident}")
     except ErreurOpenWebUI as erreur:
@@ -128,7 +143,7 @@ def assurer_fonction(client, ident, nom, contenu, description=""):
 
 
 def assurer_modele(client, formulaire):
-    """Appels 3 et 4 : crée ou met à jour un modèle personnalisé (identifiant dans le formulaire)."""
+    """Appels 3 et 4 : crée ou met à jour un modèle (identifiant dans le formulaire)."""
     try:
         existe = client.get(f"/api/v1/models/model?id={formulaire['id']}") is not None
     except ErreurOpenWebUI as erreur:
@@ -161,7 +176,10 @@ def formulaires_modeles(filtres=(), droits=None):
                     "capabilities": {"vision": True, "file_upload": True, "citations": True},
                     "filterIds": list(filtres),
                 },
-                "params": {"system": config["invite_systeme"], "temperature": m.get("temperature", 0.1)},
+                "params": {
+                    "system": config["invite_systeme"],
+                    "temperature": m.get("temperature", 0.1),
+                },
                 "access_grants": droits or [],
                 "is_active": True,
             }
@@ -174,9 +192,7 @@ def lire_consignes():
     consignes = []
     for f in sorted((DOSSIER_OWUI / "consignes").glob("*.md")):
         entete, _, contenu = f.read_text(encoding="utf-8").partition("\n---\n")
-        champs = dict(
-            ligne.split(":", 1) for ligne in entete.strip().splitlines() if ":" in ligne
-        )
+        champs = dict(ligne.split(":", 1) for ligne in entete.strip().splitlines() if ":" in ligne)
         consignes.append(
             {
                 "command": champs["commande"].strip(),
@@ -212,7 +228,8 @@ def assurer_groupe(client, nom, description):
         "chat": {"stt": False, "tts": False, "call": False},
     }
     return client.post(
-        "/api/v1/groups/create", {"name": nom, "description": description, "permissions": permissions}
+        "/api/v1/groups/create",
+        {"name": nom, "description": description, "permissions": permissions},
     )["id"]
 
 

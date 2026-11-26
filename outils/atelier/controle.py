@@ -61,9 +61,14 @@ def deposer(client, chemin):
     """Dépôt d'un fichier (multipart/form-data) ; renvoie son identifiant."""
     limite = uuid.uuid4().hex
     corps = (
-        f'--{limite}\r\nContent-Disposition: form-data; name="file"; filename="{chemin.name}"\r\n'
-        f"Content-Type: application/octet-stream\r\n\r\n"
-    ).encode() + chemin.read_bytes() + f"\r\n--{limite}--\r\n".encode()
+        (
+            f"--{limite}\r\nContent-Disposition: form-data; "
+            f'name="file"; filename="{chemin.name}"\r\n'
+            f"Content-Type: application/octet-stream\r\n\r\n"
+        ).encode()
+        + chemin.read_bytes()
+        + f"\r\n--{limite}--\r\n".encode()
+    )
     reponse = client.requete(
         "POST",
         "/api/v1/files/?process=true",
@@ -76,7 +81,9 @@ def deposer(client, chemin):
 def image_png(chemin):
     return {
         "type": "image_url",
-        "image_url": {"url": "data:image/png;base64," + base64.b64encode(chemin.read_bytes()).decode()},
+        "image_url": {
+            "url": "data:image/png;base64," + base64.b64encode(chemin.read_bytes()).decode()
+        },
     }
 
 
@@ -136,7 +143,9 @@ class Releve:
         }
         inconnues = self.ips - autorisees
         if inconnues:
-            raise AssertionError(f"connexions vers des destinations non autorisées : {sorted(inconnues)}")
+            raise AssertionError(
+                f"connexions vers des destinations non autorisées : {sorted(inconnues)}"
+            )
         return f"{len(self.ips)} destination(s), toutes chez {', '.join(DESTINATIONS_AUTORISEES)}"
 
 
@@ -172,7 +181,11 @@ def controler(base, client_admin, domaine, conteneur=None, cookie=None, charge=0
         try:
             nouveau_client().post(
                 "/api/v1/auths/signup",
-                {"name": "Intrus", "email": f"intrus@{domaine}", "password": secrets.token_urlsafe(12)},
+                {
+                    "name": "Intrus",
+                    "email": f"intrus@{domaine}",
+                    "password": secrets.token_urlsafe(12),
+                },
             )
         except openwebui.ErreurOpenWebUI as erreur:
             return f"refusée (HTTP {erreur.code})"
@@ -184,7 +197,10 @@ def controler(base, client_admin, domaine, conteneur=None, cookie=None, charge=0
     if releve:
         releve.__enter__()
     try:
-        bilan.etape("Appel du modèle", lambda: f"{len(demander(etat['c1'], 'Réponds seulement : prêt.'))} caractères")
+        bilan.etape(
+            "Appel du modèle",
+            lambda: f"{len(demander(etat['c1'], 'Réponds seulement : prêt.'))} caractères",
+        )
 
         def plan():
             plan_png = EXEMPLES / "plan-salle3-indB.png"
@@ -228,7 +244,9 @@ def controler(base, client_admin, domaine, conteneur=None, cookie=None, charge=0
     if releve:
         bilan.etape("Connexions sortantes", releve.verifier)
     else:
-        bilan.lignes.append("SAUTÉ  Connexions sortantes : vérifiées en local (même image et configuration)")
+        bilan.lignes.append(
+            "SAUTÉ  Connexions sortantes : vérifiées en local (même image et configuration)"
+        )
         print(bilan.lignes[-1])
 
     if charge:
@@ -259,14 +277,19 @@ def _conclure(bilan, client_admin, comptes):
             client_admin.delete(f"/api/v1/users/{ident}")
         except openwebui.ErreurOpenWebUI:
             print(f"ATTENTION : compte de contrôle {ident} non supprimé")
-    print(f"\nContrôle {'en ÉCHEC' if bilan.echec else 'réussi'} ({len(comptes)} compte(s) de contrôle supprimé(s)).")
+    print(
+        f"\nContrôle {'en ÉCHEC' if bilan.echec else 'réussi'} "
+        f"({len(comptes)} compte(s) de contrôle supprimé(s))."
+    )
     return 1 if bilan.echec else 0
 
 
 def controler_local(args):
     from atelier import local
 
-    return controler(local.ADRESSE, local.client_formateur(), "local.atelier", conteneur=CONTENEUR_LOCAL)
+    return controler(
+        local.ADRESSE, local.client_formateur(), "local.atelier", conteneur=CONTENEUR_LOCAL
+    )
 
 
 def controler_session(args):

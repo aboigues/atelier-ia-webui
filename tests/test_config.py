@@ -1,4 +1,5 @@
-"""Tests de outils/atelier/config.py (data-model.md Session et Compte, contracts/fichiers-session.md)."""
+"""Tests de outils/atelier/config.py (data-model.md Session et Compte,
+contracts/fichiers-session.md)."""
 
 import datetime as dt
 import sys
@@ -62,10 +63,15 @@ class TestSession(unittest.TestCase):
 
 class TestParticipants(unittest.TestCase):
     def test_point_virgule_et_virgule(self):
-        for csv in ("prenom;nom\nÉlodie;Martin\nThéo;Fontaine\n", "prenom,nom\nÉlodie,Martin\nThéo,Fontaine\n"):
+        for csv in (
+            "prenom;nom\nÉlodie;Martin\nThéo;Fontaine\n",
+            "prenom,nom\nÉlodie,Martin\nThéo,Fontaine\n",
+        ):
             with self.subTest(csv=csv):
                 p = config.lire_participants(dossier_session(csv=csv))
-                self.assertEqual([(x.prenom, x.nom) for x in p], [("Élodie", "Martin"), ("Théo", "Fontaine")])
+                self.assertEqual(
+                    [(x.prenom, x.nom) for x in p], [("Élodie", "Martin"), ("Théo", "Fontaine")]
+                )
 
     def test_entete_obligatoire(self):
         with self.assertRaises(config.ErreurConfig):

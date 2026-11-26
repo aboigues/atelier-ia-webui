@@ -7,19 +7,48 @@
 identifiants/
 
 # Documents clients et données de session (constitution, principe I) : jamais versionnés
+# sessions/<id>/ : session.toml, participants.csv, identifiants, état OpenTofu (clé de session)
+# exports/<id>/ : consignes exportées et rapport de purge
 sessions/
 documents-clients/
 exports/
 
-# OpenTofu
+# Contexte client lu par Claude Code (nom du client, dates) : jamais versionné
+CLAUDE.local.md
+.claude/settings.local.json
+
+# Sorties de la démo en ligne de commande (exemples/bloc-operatoire/demo.py) ;
+# les réponses de référence versionnées sont dans resultats-reference/
+exemples/bloc-operatoire/resultats/
+
+# OpenTofu (.terraform.lock.hcl reste versionné : il fige les fournisseurs)
 .terraform/
 *.tfstate
 *.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
 *.tfvars
+*.tfvars.json
 !exemple.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
 
-# Divers
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
 .venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Éditeurs et systèmes (dont les fichiers Zone.Identifier créés par Windows sous WSL)
+.vscode/
+.idea/
+*.swp
+*~
 .DS_Store
+Thumbs.db
+*:Zone.Identifier

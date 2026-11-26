@@ -195,7 +195,7 @@ vérifier avec la console de commande Scaleway qu'aucune ressource de la session
   les images de plans le 2026-11-24 ; un modèle plus léger peut servir de secours.
 - L'environnement hébergé tourne sur une instance Scaleway à Paris ; l'adresse est un
   sous-domaine de `telemach-learning.fr` (DNS géré par Alexandre), avec un certificat
-  automatique. À confirmer pendant `/speckit-plan`.
+  automatique. Confirmé le 2026-11-26 : `<id>.atelier.telemach-learning.fr`, sous-domaine délégué à Scaleway DNS (voir `research.md`, R8).
 - Les identifiants sont générés par le formateur et remis sur papier ou par la messagerie du
   client ; pas d'authentification unique (SSO) en v1.
 - Les participants disposent d'un ordinateur portable avec un navigateur récent et d'un accès à

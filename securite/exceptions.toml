@@ -1,0 +1,123 @@
+# Exceptions de sécurité datées (constitution, principe VII ; specs/002-chaine-controle-securite,
+# FR-007 et FR-008 ; format : contracts/exceptions.md). Toute modification passe par une PR.
+# Une exception échue (après reexamen_le) cesse de s'appliquer : le contrôle redevient bloquant.
+
+# Exception de classe exigée par FR-007 (choix d'Alexandre du 2026-11-26, question Q1) :
+# vulnérabilités élevées sans correctif publié, listées dans le rapport sans bloquer.
+[[exception]]
+id = "elevee-sans-correctif"
+type = "classe"
+portee = "*"
+raison = "Images tierces (Open WebUI, Caddy, outils) : paquets système sans correctif publié ; suivi hebdomadaire."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2027-02-24
+
+# Trivy v0.76.2 (dernière version) : plantage sur données zstd malformées dans
+# github.com/klauspost/compress 1.20.1 (corrigé en 1.20.2). Trivy n'analyse que les fichiers
+# IaC du dépôt ; le pire cas est un plantage qui fait échouer le contrôle (fermé en cas d'échec).
+# Acceptée par Alexandre le 2026-11-26 ; à lever dès qu'une version de Trivy corrige la faille.
+[[exception]]
+id = "GO-2026-6865"
+type = "vulnerabilite"
+portee = "binaire:trivy"
+raison = "Plantage seulement (déni de service local), Trivy limité à l'analyse des fichiers IaC du dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2027-02-24
+
+# OpenTofu 1.13.10 (dernière version stable au 2026-11-26) : dépendances Go vulnérables, toutes
+# corrigées en amont. Acceptées par Alexandre le 2026-11-26 pour 30 jours ; à lever dès qu'une
+# version d'OpenTofu les corrige (vérification avant la session de décembre).
+
+[[exception]]
+id = "GO-2026-6612"
+type = "vulnerabilite"
+portee = "binaire:tofu"
+raison = "x/net 0.57.0 : serveur HTTP/2 (critique) ; OpenTofu n'expose aucun serveur HTTP/2, il est client."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GO-2026-6603"
+type = "vulnerabilite"
+portee = "binaire:tofu"
+raison = "x/net 0.57.0 (élevée) ; OpenTofu ne parle qu'à l'API Scaleway et au registre OpenTofu."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GO-2026-6610"
+type = "vulnerabilite"
+portee = "binaire:tofu"
+raison = "x/net 0.57.0 (élevée) ; OpenTofu ne parle qu'à l'API Scaleway et au registre OpenTofu."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GO-2026-6611"
+type = "vulnerabilite"
+portee = "binaire:tofu"
+raison = "x/net 0.57.0 (élevée) ; OpenTofu ne parle qu'à l'API Scaleway et au registre OpenTofu."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GO-2026-6617"
+type = "vulnerabilite"
+portee = "binaire:tofu"
+raison = "x/net 0.57.0 (élevée) ; OpenTofu ne parle qu'à l'API Scaleway et au registre OpenTofu."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-2v4p-qf9q-27wj"
+type = "vulnerabilite"
+portee = "binaire:tofu"
+raison = "grpc 1.83.1 (élevée) ; gRPC local entre OpenTofu et ses fournisseurs vérifiés par empreinte."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-mgcc-cww5-fp2q"
+type = "vulnerabilite"
+portee = "binaire:tofu"
+raison = "go-jose 4.1.4 (élevée) ; aucun jeton JOSE traité par OpenTofu dans notre usage."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GO-2026-6865"
+type = "vulnerabilite"
+portee = "binaire:tofu"
+raison = "compress 1.19.2 (élevée) : plantage sur données zstd malformées, déni de service local seulement."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+# Modèle de vulnérabilité individuelle :
+# [[exception]]
+# id = "CVE-AAAA-NNNNN"
+# type = "vulnerabilite"
+# portee = "ghcr.io/open-webui/open-webui"
+# raison = "Composant non exposé : ..."
+# acceptee_par = "Alexandre"
+# acceptee_le = 2026-12-01
+# reexamen_le = 2027-01-15
+
+# Modèle de faux positif de secret (identifiant <commit>:<fichier>:<ligne>, affiché par
+# outils/securite/verdict_secrets.py) :
+# [[exception]]
+# id = "<empreinte>"
+# type = "secret-faux-positif"
+# portee = "exemples/bloc-operatoire/..."
+# raison = "Valeur fictive du jeu d'exemples, sans usage réel."
+# acceptee_par = "Alexandre"
+# acceptee_le = 2026-12-01
+# reexamen_le = 2027-02-28

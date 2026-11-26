@@ -1,0 +1,9 @@
+name: "Configuration CodeQL atelier-ia-webui"
+
+queries:
+  - uses: security-extended
+
+# Fichiers tiers de Spec-Kit, copiés d'un projet externe et non modifiés ici.
+paths-ignore:
+  - .specify/scripts
+  - .claude/skills

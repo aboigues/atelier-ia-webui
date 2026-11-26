@@ -25,6 +25,8 @@ formations IA de Telemach Learning. Principes non négociables : `.specify/memor
 - **Sécurité (constitution, principe VII)** : gates GitHub bloquantes sur chaque PR (linters,
   SAST, SCA, IaC, secrets, tests) ; actions épinglées par SHA, permissions minimales ; un
   contrôle en échec se corrige, il ne se désactive pas. Dependabot : activation ultérieure.
+  Avant chaque push : `outils/securite/controles-locaux.sh`. Merge en squash ou rebase
+  seulement (historique linéaire). Toute exception de sécurité est acceptée par Alexandre.
 - **PR : création autorisée, merge interdit** — commit + push + `gh pr create` possibles, jamais
   `gh pr merge` : Alexandre merge lui-même. Nouvelle branche après chaque merge ; PR toujours
   vers `main`.
@@ -33,7 +35,8 @@ formations IA de Telemach Learning. Principes non négociables : `.specify/memor
 
 Cycle par fonctionnalité : `/speckit-specify` -> `/speckit-clarify` (si besoin) ->
 `/speckit-plan` -> `/speckit-tasks` -> `/speckit-analyze` -> `/speckit-implement`.
-Fonctionnalité en cours : `specs/001-environnement-tp-session/` (spec et plan rédigés, tâches à générer).
+Fonctionnalités : `specs/002-chaine-controle-securite/` implémentée (PR en revue ; mise en service après merge : T039, T040),
+à livrer avant le code de `specs/001-environnement-tp-session/` (plan fait, tâches à générer).
 
 ## Contexte
 

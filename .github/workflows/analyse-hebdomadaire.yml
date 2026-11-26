@@ -1,0 +1,61 @@
+# Analyse hebdomadaire de main (FR-009) : une vulnérabilité peut être publiée sans que le dépôt
+# change. Mêmes scripts et mêmes outils que les contrôles de PR ; résultats dans l'onglet
+# Sécurité, échec notifié par courriel au propriétaire du dépôt.
+name: Analyse hebdomadaire
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read # par défaut : lecture seule pour toutes les tâches
+
+concurrency:
+  group: analyse-hebdomadaire
+  cancel-in-progress: false
+
+jobs:
+  sca:
+    name: sca # vulnérabilités des images et binaires
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read # lecture du dépôt uniquement
+      security-events: write # dépôt du SARIF de Grype dans l'onglet Sécurité
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Vulnérabilités des composants tiers
+        run: outils/securite/controle.sh sca
+      - name: Dépôt du SARIF de Grype
+        if: always()
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@915412ff23e8b7659517e607487dbeae018f2934 # v4.39.5
+        with:
+          sarif_file: ${{ runner.temp }}/controles-atelier/sarif-sca
+          category: grype-hebdomadaire
+
+  zizmor:
+    name: zizmor # sécurité des workflows, audits en ligne (actions connues comme vulnérables)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read # lecture du dépôt uniquement
+      security-events: write # dépôt du SARIF de zizmor dans l'onglet Sécurité
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Linters et sécurité des workflows
+        run: outils/securite/controle.sh lint
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Dépôt du SARIF de zizmor
+        if: always()
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@915412ff23e8b7659517e607487dbeae018f2934 # v4.39.5
+        with:
+          sarif_file: ${{ runner.temp }}/controles-atelier/zizmor.sarif
+          category: zizmor-hebdomadaire

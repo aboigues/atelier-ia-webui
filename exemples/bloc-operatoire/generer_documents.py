@@ -96,7 +96,7 @@ def plan(indice):
         (2.6, 6.6, "P3", f"Porte coulissante hermétique {largeur_p3} x 2,10"),
         (9.6, 1.0, "P4", "Porte battante 0,90 x 2,10"),
     ]
-    for x, y, code, lib in portes:
+    for x, y, code, _lib in portes:
         X, Y = m(x, y)
         c.setFillGray(1)
         c.rect(X - 2.2 * mm, Y - 2.2 * mm, 4.4 * mm, 4.4 * mm, stroke=1, fill=1)
@@ -108,7 +108,14 @@ def plan(indice):
     ps = 2.8 if b else 3.2
     x0, y0 = 3.5 - ps / 2, 3.2 - ps / 2
     rect(c, x0, y0, ps, ps, dash=(4, 3), lw=0.8)
-    text(c, x0 + 0.1, y0 + ps + 0.12, f"Plafond soufflant {str(ps).replace('.', ',')} x {str(ps).replace('.', ',')} m - flux unidirectionnel", 6)
+    text(
+        c,
+        x0 + 0.1,
+        y0 + ps + 0.12,
+        f"Plafond soufflant {str(ps).replace('.', ',')} x {str(ps).replace('.', ',')} m"
+        " - flux unidirectionnel",
+        6,
+    )
 
     # Équipements (repères)
     rect(c, 2.6, 2.95, 1.8, 0.5, fill=0.85)  # table
@@ -172,7 +179,7 @@ def plan(indice):
     c.setFont("Helvetica-Bold", 6.5)
     c.drawString(tx, ty, "PORTES")
     c.setFont("Helvetica", 6.5)
-    for x, y, code, lib in portes:
+    for _x, _y, code, lib in portes:
         ty -= 5 * mm
         c.drawString(tx, ty, code)
         c.drawString(tx + 16 * mm, ty, lib)
@@ -213,14 +220,18 @@ def plan(indice):
         c.drawString(cx + 14 * mm, cy + 4 * mm, "20/11/2026")
         # Volontairement incomplet : la réduction de la porte P3 et du plafond soufflant
         # ne sont pas signalées.
-        c.drawString(cx + 36 * mm, cy + 4 * mm,
-                     "Déplacement du bras chirurgien E02, ajout du pupitre E09")
+        c.drawString(
+            cx + 36 * mm, cy + 4 * mm, "Déplacement du bras chirurgien E02, ajout du pupitre E09"
+        )
 
     c.showPage()
     c.save()
     png = path.with_suffix("")
-    subprocess.run(["pdftoppm", "-png", "-r", "130", "-singlefile", str(path), str(png)],
-                   check=True)
+    # Commande fixe, arguments en liste, sans shell ; pdftoppm pris dans le PATH.
+    subprocess.run(  # noqa: S603
+        ["pdftoppm", "-png", "-r", "130", "-singlefile", str(path), str(png)],  # noqa: S607
+        check=True,
+    )
     return path
 
 
@@ -327,21 +338,31 @@ def ifc():
     u1 = add("IFCSIUNIT(*,.LENGTHUNIT.,$,.METRE.)")
     u2 = add("IFCSIUNIT(*,.AREAUNIT.,$,.SQUARE_METRE.)")
     ua = add(f"IFCUNITASSIGNMENT((#{u1},#{u2}))")
-    proj = add(f"IFCPROJECT('{gid(1)}',#{oh},'CH Valmont - Bloc operatoire (fictif)',$,$,$,$,$,#{ua})")
+    proj = add(
+        f"IFCPROJECT('{gid(1)}',#{oh},'CH Valmont - Bloc operatoire (fictif)',$,$,$,$,$,#{ua})"
+    )
     site = add(f"IFCSITE('{gid(2)}',#{oh},'Site CH Valmont',$,$,$,$,$,.ELEMENT.,$,$,$,$,$)")
-    bat = add(f"IFCBUILDING('{gid(3)}',#{oh},'Batiment B - Plateau technique',$,$,$,$,$,.ELEMENT.,$,$,$)")
-    niv = add(f"IFCBUILDINGSTOREY('{gid(4)}',#{oh},'Niveau 1 - Bloc operatoire',$,$,$,$,$,.ELEMENT.,4.2)")
+    bat = add(
+        f"IFCBUILDING('{gid(3)}',#{oh},'Batiment B - Plateau technique',$,$,$,$,$,.ELEMENT.,$,$,$)"
+    )
+    niv = add(
+        f"IFCBUILDINGSTOREY('{gid(4)}',#{oh},'Niveau 1 - Bloc operatoire',$,$,$,$,$,.ELEMENT.,4.2)"
+    )
     add(f"IFCRELAGGREGATES('{gid(5)}',#{oh},$,$,#{proj},(#{site}))")
     add(f"IFCRELAGGREGATES('{gid(6)}',#{oh},$,$,#{site},(#{bat}))")
     add(f"IFCRELAGGREGATES('{gid(7)}',#{oh},$,$,#{bat},(#{niv}))")
 
     def enc(s):
-        return "".join(c if ord(c) < 128 else f"\\X2\\{ord(c):04X}\\X0\\" for c in s).replace("'", "''")
+        return "".join(c if ord(c) < 128 else f"\\X2\\{ord(c):04X}\\X0\\" for c in s).replace(
+            "'", "''"
+        )
 
     spaces = []
     for i, (code, lib, surf, iso, ps, pa, br) in enumerate(ESPACES):
-        sp = add(f"IFCSPACE('{gid(100 + i)}',#{oh},'{code}','{enc(lib)}',$,$,$,'{enc(lib)}',"
-                 f".ELEMENT.,.INTERNAL.,$)")
+        sp = add(
+            f"IFCSPACE('{gid(100 + i)}',#{oh},'{code}','{enc(lib)}',$,$,$,'{enc(lib)}',"
+            f".ELEMENT.,.INTERNAL.,$)"
+        )
         spaces.append(sp)
         p1 = add(f"IFCPROPERTYSINGLEVALUE('NetFloorArea',$,IFCAREAMEASURE({surf}),$)")
         q = add(f"IFCPROPERTYSET('{gid(200 + i)}',#{oh},'Pset_SpaceCommon',$,(#{p1}))")
@@ -351,15 +372,20 @@ def ifc():
         b_ = add(f"IFCPROPERTYSINGLEVALUE('PlafondSoufflant',$,IFCBOOLEAN({v}),$)")
         c_ = add(f"IFCPROPERTYSINGLEVALUE('SurpressionPa',$,IFCREAL({float(pa)}),$)")
         d = add(f"IFCPROPERTYSINGLEVALUE('TauxBrassageVolH',$,IFCREAL({float(br)}),$)")
-        q2 = add(f"IFCPROPERTYSET('{gid(400 + i)}',#{oh},'Pset_SallePropre',$,(#{a},#{b_},#{c_},#{d}))")
+        q2 = add(
+            f"IFCPROPERTYSET('{gid(400 + i)}',#{oh},'Pset_SallePropre',$,(#{a},#{b_},#{c_},#{d}))"
+        )
         add(f"IFCRELDEFINESBYPROPERTIES('{gid(500 + i)}',#{oh},$,$,(#{sp}),#{q2})")
     add(f"IFCRELAGGREGATES('{gid(8)}',#{oh},$,$,#{niv},({','.join('#' + str(s) for s in spaces)}))")
 
-    head = ("ISO-10303-21;\nHEADER;\nFILE_DESCRIPTION(('ViewDefinition [ReferenceView]'),'2;1');\n"
-            "FILE_NAME('maquette-bloc.ifc','2026-11-24T00:00:00',('Alpha Ingenierie'),"
-            "('fictif'),'generer_documents.py','demo','');\nFILE_SCHEMA(('IFC4'));\nENDSEC;\nDATA;\n")
-    (OUT / "maquette-bloc.ifc").write_text(head + "\n".join(lines) + "\nENDSEC;\nEND-ISO-10303-21;\n",
-                                          encoding="ascii")
+    head = (
+        "ISO-10303-21;\nHEADER;\nFILE_DESCRIPTION(('ViewDefinition [ReferenceView]'),'2;1');\n"
+        "FILE_NAME('maquette-bloc.ifc','2026-11-24T00:00:00',('Alpha Ingenierie'),"
+        "('fictif'),'generer_documents.py','demo','');\nFILE_SCHEMA(('IFC4'));\nENDSEC;\nDATA;\n"
+    )
+    (OUT / "maquette-bloc.ifc").write_text(
+        head + "\n".join(lines) + "\nENDSEC;\nEND-ISO-10303-21;\n", encoding="ascii"
+    )
 
 
 if __name__ == "__main__":

@@ -124,6 +124,11 @@ WebUI charge chaque fonction comme un module unique ; les tests l'importent dire
 - Fait le 2026-11-26 : délégation DNS de `atelier.telemach-learning.fr`, OpenTofu `v1.13.10`
   sur le poste, mesure des quotas (R11). En attente : validation d'identité de l'organisation
   Scaleway (hausse des quotas) ; relire les en-têtes `x-ratelimit-*` une fois validée.
+- Contrôles de sécurité (fonctionnalité 002, research.md R9 et R10) : images de
+  `openwebui/compose.yaml` et de cloud-init épinglées par empreinte (`image:tag@sha256:...`),
+  code conforme aux six contrôles requis dès le premier commit (Ruff règles `S`, ShellCheck,
+  OpenTofu et TFLint, Trivy, politiques IaC maison, TruffleHog, tests). Les exceptions
+  OpenTofu 1.13.10 sont à réexaminer avant le 2026-12-26.
 - Jalons de la spec : local opérationnel le 2026-12-03 ; session de répétition complète
   (scénario C du quickstart) avant le 2026-12-09.
 

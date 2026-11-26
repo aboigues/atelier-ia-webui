@@ -1,0 +1,31 @@
+# Outils de la chaîne de contrôle, figés par version ET empreinte (constitution, principes V et VII).
+# Images : outils dont l'image officielle n'a aucune vulnérabilité critique ou élevée.
+# Binaires : outils dont l'image officielle en avait (paquets système non mis à jour) ; on prend
+# alors le binaire officiel de la release, vérifié par sa somme SHA-256 (décision d'Alexandre du
+# 2026-11-26). Tous, images et binaires, sont analysés par Grype à chaque contrôle « sca ».
+# Source unique lue par les workflows (.github/workflows/) et par le contrôle local
+# (outils/securite/controles-locaux.sh). Format : nom=image:version@sha256:<64 hex>, ou, pour un
+# binaire téléchargé, nom=URL#sha256=<64 hex>.
+# Versions relevées le 2026-11-26 (pages de releases), empreintes résolues avec
+# `docker buildx imagetools inspect`. Toute mise à jour : relever à nouveau version et empreinte.
+
+ruff=ghcr.io/astral-sh/ruff:0.17.6@sha256:2671e9bf3e50c24a88e731f209f9bf01c0360da6857ae36bca680b222efc3528
+shellcheck=koalaman/shellcheck:v0.11.0@sha256:61862eba1fcf09a484ebcc6feea46f1782532571a34ed51fedf90dd25f925a8d
+zizmor=ghcr.io/zizmorcore/zizmor:1.33.1@sha256:ecd3ffe6158de1322e05a044ed43749bee12b1dccb7e1a7859bc6ac4b2a1c516
+grype=anchore/grype:v0.122.1@sha256:661583704a253c0448ed63998b5ea2cd9d5a76ee71eedc4aed439b8ce3e93a1c
+
+# OpenTofu : somme tirée de tofu_1.13.10_SHA256SUMS, dont la signature GPG (clé OpenTofu
+# E3E6 E43D 84CB 852E ADB0 051D 0C0A F313 E5FD 9F80) a été vérifiée le 2026-11-26.
+opentofu=https://github.com/opentofu/opentofu/releases/download/v1.13.10/tofu_1.13.10_linux_amd64.zip#sha256=c1f0d6b34d8328f963d3b1ad10896fae30a6c6890596190ffef477dab991090f
+
+# Binaires officiels (somme lue dans le fichier de sommes de la release, identique à l'empreinte
+# calculée par GitHub pour le fichier ; vérifiée le 2026-11-26). Le binaire porte le nom de l'outil.
+actionlint=https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz#sha256=8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+tflint=https://github.com/terraform-linters/tflint/releases/download/v0.66.0/tflint_linux_amd64.zip#sha256=22be11cadc25cd02401e94c0ccc91aa63467debb8485c2a755d98f4c0a9d1e2e
+osv-scanner=https://github.com/google/osv-scanner/releases/download/v2.7.1/osv-scanner_linux_amd64#sha256=fb7dab19a8bd9bbe5c3189f09d4b7ee1820c9553a23bac202648a56efd2f6ee8
+# TruffleHog remplace Gitleaks (dernière version de mars 2026, compilée avec une bibliothèque Go
+# vulnérable ; décision d'Alexandre du 2026-11-26).
+trufflehog=https://github.com/trufflesecurity/trufflehog/releases/download/v3.100.1/trufflehog_3.100.1_linux_amd64.tar.gz#sha256=b2460688116f29ce33f1afe16d14fef3fa3db928e74ba55a6c9fed392c60ad69
+# Trivy (mode config) remplace Checkov ; binaire seulement, jamais l'action GitHub ni l'image
+# (compromises en mars 2026). Release immuable sur GitHub.
+trivy=https://github.com/aquasecurity/trivy/releases/download/v0.76.2/trivy_0.76.2_Linux-64bit.tar.gz#sha256=bc0fc726e017b8927a62b2d3531d7a84ee01769daf5c99ed866dced54089fdbf

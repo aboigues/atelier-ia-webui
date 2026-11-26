@@ -3,8 +3,8 @@
 Environnement de travaux pratiques des formations IA de Telemach Learning : une interface web
 (Open WebUI) reliée à des modèles d'IA ouverts hébergés en France, que le formateur crée pour une
 session et détruit après. Premier usage : l'atelier « IA et analyse de plans pour le bureau
-d'études » d'un intégrateur de blocs opératoires (décembre 2026). Il sert aussi de préfiguration à l'accompagnement qui
-suit la formation (déploiement d'une solution chez le client).
+d'études » d'un intégrateur de blocs opératoires (décembre 2026). Il sert aussi de préfiguration
+à l'accompagnement qui suit la formation (déploiement d'une solution chez le client).
 
 ## Core Principles
 
@@ -63,6 +63,37 @@ et le cœur du discours sur les plans d'établissements de santé.
   accents et diacritiques complets.
 - Zéro emoji, partout : code, documentation, interface, commits, journaux.
 
+### VII. Sécurité de très haut niveau, contrôlée par des gates GitHub (NON NÉGOCIABLE)
+
+- La sécurité est tenue à très haut niveau sur tout le projet : code, infrastructure,
+  chaîne d'approvisionnement et configuration d'Open WebUI. En cas d'arbitrage entre sécurité
+  et simplicité (principe IV), la sécurité l'emporte.
+- La branche `main` est protégée : passage par une PR obligatoire, contrôles requis au vert,
+  historique linéaire, aucun push direct ni force-push, y compris pour l'administrateur.
+- Chaque PR vers `main` passe des contrôles automatiques bloquants (GitHub Actions), au
+  minimum :
+  - linters : Python, shell, OpenTofu (`tofu fmt -check`, `tofu validate`), YAML, workflows
+    GitHub Actions ;
+  - SAST : analyse statique de sécurité du code ;
+  - SCA : vulnérabilités connues des dépendances et des images Docker figées ;
+  - analyse de sécurité de l'infrastructure en code (OpenTofu, cloud-init, Compose) ;
+  - détection de secrets dans le code et dans tout l'historique ;
+  - tests unitaires.
+- Une vulnérabilité critique ou élevée bloque le merge, sauf exception acceptée par Alexandre
+  et documentée dans le dépôt (vulnérabilité, raison, date de réexamen).
+- Chaîne d'approvisionnement : chaque action GitHub est épinglée par son empreinte SHA complète
+  (version lisible en commentaire) ; les jetons de workflow ont les permissions minimales
+  (`contents: read` par défaut, élévation par tâche et justifiée) ; aucun secret n'apparaît
+  dans les journaux.
+- Dependabot (alertes et mises à jour de sécurité et de versions pour les actions GitHub, les
+  images Docker et le fournisseur OpenTofu) sera activé ultérieurement ; d'ici là, la
+  vérification des versions reste manuelle selon le principe V.
+- Des contrôles tous au vert ne valent pas merge : le merge reste réservé à Alexandre.
+
+Raison : le dépôt est public et l'environnement reçoit des plans d'établissements de santé ;
+une faille dans le code, une action compromise ou un secret divulgué ruinerait la promesse
+faite au client (principe I).
+
 ## Contraintes techniques
 
 - Interface : Open WebUI (version figée, vérifiée à l'ajout ; v0.13.5 au 2026-11-26).
@@ -79,6 +110,10 @@ et le cœur du discours sur les plans d'établissements de santé.
   ambiguïté, `/speckit-plan`, `/speckit-tasks`, `/speckit-implement`.
 - Une branche par fonctionnalité ; commit, push et création de PR autorisés pour Claude ;
   **le merge est réservé à Alexandre**. Nouvelle branche après chaque merge.
+- Gates avant merge (principe VII) : une PR n'est proposée au merge que lorsque tous les
+  contrôles requis sont au vert ; un contrôle en échec se corrige dans la PR, il ne se
+  désactive pas et ne se contourne pas. Toute modification des workflows, des règles de
+  protection ou des seuils de sécurité passe par une PR dédiée, validée par Alexandre.
 - Contrôle avant session (veille et jour J) : un test de bout en bout automatisé vérifie la
   connexion d'un compte, l'appel au modèle, le dépôt d'une image de plan et la conversion IFC.
 - Contrôle après session : la purge est lancée et son rapport conservé (sans donnée client).
@@ -86,9 +121,9 @@ et le cœur du discours sur les plans d'établissements de santé.
 ## Governance
 
 - Cette constitution prime sur toute autre pratique du dépôt ; chaque spécification, plan et
-  revue de PR vérifie sa conformité, en particulier aux principes I et II.
+  revue de PR vérifie sa conformité, en particulier aux principes I, II et VII.
 - Modification : par PR dédiée, validée par Alexandre, avec incrément de version (MAJEUR :
   principe retiré ou redéfini ; MINEUR : principe ou section ajouté ; CORRECTIF : rédaction).
 - Les consignes d'exécution courantes pour les agents sont dans `CLAUDE.md`.
 
-**Version**: 1.0.0 | **Ratified**: 2026-11-26 | **Last Amended**: 2026-11-26
+**Version**: 1.1.0 | **Ratified**: 2026-11-26 | **Last Amended**: 2026-11-26

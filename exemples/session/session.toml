@@ -1,0 +1,9 @@
+# Session FICTIVE de répétition (contracts/fichiers-session.md). Les vraies sessions vivent dans
+# sessions/<id>/ (ignoré par Git) : copier ce fichier, puis l'adapter.
+id = "repetition"
+client = "CH de Valmont (fictif)"
+debut = 2026-12-07
+fin = 2026-12-08
+type_instance = "DEV1-L"
+modele_reference = "mistral-medium-3.5-128b"
+modele_secours = "mistral-small-3.2-24b-instruct-2506"

@@ -121,3 +121,894 @@ reexamen_le = 2026-12-26
 # acceptee_par = "Alexandre"
 # acceptee_le = 2026-12-01
 # reexamen_le = 2027-02-28
+
+# ===================================================================================
+# Images d'Open WebUI v0.13.5 et de Caddy 2.11.9 (fonctionnalité 001), choix d'Alexandre du
+# 2026-11-26 : « exceptions et exposition réduite ». Une exception par vulnérabilité et par
+# image : une nouvelle faille sur le même paquet reste bloquante. Réduction d'exposition :
+# mot de passe d'accès Caddy devant Open WebUI, session de 2 jours, audio désactivé, dépôt
+# limité à png, jpg, jpeg, pdf, txt, csv et ifc. Réexamen le 2026-12-26 (ou à la prochaine
+# version d'Open WebUI ou de Caddy). Justifications vérifiées dans le code au tag v0.13.5.
+# ===================================================================================
+
+[[exception]]
+id = "GO-2026-6865"
+type = "vulnerabilite"
+portee = "caddy"
+raison = "github.com/klauspost/compress (high, avec correctif) : Plantage au décodage zstd : Caddy ne décode aucun corps zstd entrant dans notre configuration (reverse_proxy)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GO-2026-6860"
+type = "vulnerabilite"
+portee = "caddy"
+raison = "golang.org/x/net (high, avec correctif) : Analyseur HTML de x/net : modèles HTML de Caddy non utilisés (simple reverse_proxy vers Open WebUI)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-107496"
+type = "vulnerabilite"
+portee = "caddy"
+raison = "libcrypto3 (high, avec correctif) : Caddy est un binaire Go (crypto/tls) qui n'utilise pas l'OpenSSL de l'image Alpine."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-88823"
+type = "vulnerabilite"
+portee = "caddy"
+raison = "libcrypto3 (high, avec correctif) : Caddy est un binaire Go (crypto/tls) qui n'utilise pas l'OpenSSL de l'image Alpine."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-95691"
+type = "vulnerabilite"
+portee = "caddy"
+raison = "libcrypto3 (high, avec correctif) : Caddy est un binaire Go (crypto/tls) qui n'utilise pas l'OpenSSL de l'image Alpine."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-95692"
+type = "vulnerabilite"
+portee = "caddy"
+raison = "libcrypto3 (high, avec correctif) : Caddy est un binaire Go (crypto/tls) qui n'utilise pas l'OpenSSL de l'image Alpine."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-4738"
+type = "vulnerabilite"
+portee = "caddy"
+raison = "zlib (critical, avec correctif) : Caddy est un binaire Go (compress/flate) qui n'utilise pas la zlib de l'image Alpine."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-6v38-4h7w-rj9h"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "authlib (critical, avec correctif) : Authlib ne sert qu'à l'OAuth, non configuré (comptes locaux créés par Alexandre uniquement)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-7vr2-2fgp-9w7p"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "authlib (high, avec correctif) : Authlib ne sert qu'à l'OAuth, non configuré (comptes locaux créés par Alexandre uniquement)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-8m4g-j4wp-wgcg"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "authlib (high, avec correctif) : Authlib ne sert qu'à l'OAuth, non configuré (comptes locaux créés par Alexandre uniquement)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-c73q-w75p-j82v"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "authlib (high, avec correctif) : Authlib ne sert qu'à l'OAuth, non configuré (comptes locaux créés par Alexandre uniquement)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-cg8m-r9f2-5wm2"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "black (high, avec correctif) : Formateur de code inutilisé à l'exécution (exécution de code désactivée : ENABLE_CODE_EXECUTION=false)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-36p7-vc44-83pf"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "chromadb (critical, sans correctif) : ChromaDB embarqué, sans serveur Chroma en écoute ; recherche documentaire contournée (BYPASS_EMBEDDING_AND_RETRIEVAL)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-f4j7-r4q5-qw2c"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "chromadb (critical, sans correctif) : ChromaDB embarqué, sans serveur Chroma en écoute ; recherche documentaire contournée (BYPASS_EMBEDDING_AND_RETRIEVAL)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-69247"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "cryptography (high, avec correctif) : Fonctions PKCS#7 et chaînes de certificats concernées : aucun usage de PKCS#7 ni de X.509 dans le code d'Open WebUI."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-69249"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "cryptography (high, avec correctif) : Fonctions PKCS#7 et chaînes de certificats concernées : aucun usage de PKCS#7 ni de X.509 dans le code d'Open WebUI."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-g6cj-pr64-35w5"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "cryptography (high, avec correctif) : Fonctions PKCS#7 et chaînes de certificats concernées : aucun usage de PKCS#7 ni de X.509 dans le code d'Open WebUI."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-jwv3-5hgf-82ww"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "cryptography (high, avec correctif) : Fonctions PKCS#7 et chaînes de certificats concernées : aucun usage de PKCS#7 ni de X.509 dans le code d'Open WebUI."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-10536"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "curl (critical, sans correctif) : curl ne sert qu'au contrôle de santé interne vers localhost (HEALTHCHECK) ; aucun usage de libcurl ni de pycurl par Open WebUI."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-11856"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "curl (critical, sans correctif) : curl ne sert qu'au contrôle de santé interne vers localhost (HEALTHCHECK) ; aucun usage de libcurl ni de pycurl par Open WebUI."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-18924"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "curl (critical, sans correctif) : curl ne sert qu'au contrôle de santé interne vers localhost (HEALTHCHECK) ; aucun usage de libcurl ni de pycurl par Open WebUI."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-19931"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "curl (critical, sans correctif) : curl ne sert qu'au contrôle de santé interne vers localhost (HEALTHCHECK) ; aucun usage de libcurl ni de pycurl par Open WebUI."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-86414"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "curl (critical, sans correctif) : curl ne sert qu'au contrôle de santé interne vers localhost (HEALTHCHECK) ; aucun usage de libcurl ni de pycurl par Open WebUI."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-8926"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "curl (critical, sans correctif) : curl ne sert qu'au contrôle de santé interne vers localhost (HEALTHCHECK) ; aucun usage de libcurl ni de pycurl par Open WebUI."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-9079"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "curl (critical, sans correctif) : curl ne sert qu'au contrôle de santé interne vers localhost (HEALTHCHECK) ; aucun usage de libcurl ni de pycurl par Open WebUI."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-92388"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "curl (critical, sans correctif) : curl ne sert qu'au contrôle de santé interne vers localhost (HEALTHCHECK) ; aucun usage de libcurl ni de pycurl par Open WebUI."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2023-6605"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2025-1594"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2025-25469"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2025-9951"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-107695"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-125201"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-125203"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-125209"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-125244"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-125267"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-135706"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-135709"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-135722"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-135723"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-135725"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-135734"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-135736"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (critical, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-135737"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-135738"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-135739"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-135740"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-135742"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-135743"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (critical, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-30754"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-40962"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (critical, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-52296"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-52297"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-70628"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-70632"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-8461"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-96611"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (high, avec correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-75143"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "ffmpeg (critical, sans correctif) : ffmpeg ne sert qu'à l'audio, désactivé (permissions STT, TTS et appels à false) ; fichiers audio et vidéo refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-v4x8-3wr5-3wq8"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "filelock (high, avec correctif) : Verrous de fichiers internes au conteneur, sans répertoire partagé avec un autre utilisateur du système."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-27vj-qcqg-25rc"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "fsspec (high, avec correctif) : fsspec non importé par le code d'Open WebUI ; aucun système de fichiers distant configuré."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-jpxq-7h8p-2q76"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "joserfc (high, avec correctif) : Bibliothèque JOSE de l'OAuth, non configuré (comptes locaux créés par Alexandre uniquement)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-52490"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "libtiff6 (critical, sans correctif) : libtiff système : Pillow embarque la sienne ; images TIFF refusées au dépôt (png et jpg seulement)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-6653"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "libxml2 (critical, sans correctif) : libxml2 système : lxml embarque la sienne (2.14.6) ; fichiers XML, HTML et Office refusés au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-105482"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-105483"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-106069"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-111497"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (critical, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-123863"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-123864"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-123865"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-123866"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-123872"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-123874"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-126051"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-48617"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-48937"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-56846"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-56848"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "CVE-2026-58043"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "node (high, avec correctif) : Binaire node présent dans l'image mais jamais lancé (hors PATH, seul uvicorn démarre) : failles de serveur node sans objet."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-rgxp-2hwp-jwgg"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pyarrow (high, avec correctif) : pyarrow non importé par le code d'Open WebUI ; aucun fichier Parquet ou Arrow accepté au dépôt."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-9j54-fg26-wv3r"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pyjwt (high, avec correctif) : Sessions signées en HS256, algorithme explicite, secret aléatoire de 32 octets ; ni PyJWK, ni PyJWKClient, ni clé asymétrique (utils/auth.py)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-9v7f-9g4p-ffgj"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pyjwt (high, avec correctif) : Sessions signées en HS256, algorithme explicite, secret aléatoire de 32 octets ; ni PyJWK, ni PyJWKClient, ni clé asymétrique (utils/auth.py)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-ffc3-869f-jxw9"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pyjwt (critical, avec correctif) : Sessions signées en HS256, algorithme explicite, secret aléatoire de 32 octets ; ni PyJWK, ni PyJWKClient, ni clé asymétrique (utils/auth.py)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-p4g4-x82p-q773"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pyjwt (high, avec correctif) : Sessions signées en HS256, algorithme explicite, secret aléatoire de 32 octets ; ni PyJWK, ni PyJWKClient, ni clé asymétrique (utils/auth.py)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-pxh4-856f-4h89"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pyjwt (high, avec correctif) : Sessions signées en HS256, algorithme explicite, secret aléatoire de 32 octets ; ni PyJWK, ni PyJWKClient, ni clé asymétrique (utils/auth.py)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-r6x4-923q-g947"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pyjwt (high, avec correctif) : Sessions signées en HS256, algorithme explicite, secret aléatoire de 32 octets ; ni PyJWK, ni PyJWKClient, ni clé asymétrique (utils/auth.py)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-w2cx-738m-mc7w"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pyjwt (high, avec correctif) : Sessions signées en HS256, algorithme explicite, secret aléatoire de 32 octets ; ni PyJWK, ni PyJWKClient, ni clé asymétrique (utils/auth.py)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-42gh-23hr-vphw"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pypdf (high, avec correctif) : Déni de service sur PDF piégé : dépôt réservé aux comptes créés par Alexandre, derrière le mot de passe d'accès Caddy, session de 2 jours."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-4vqv-7265-gm2w"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pypdf (high, avec correctif) : Déni de service sur PDF piégé : dépôt réservé aux comptes créés par Alexandre, derrière le mot de passe d'accès Caddy, session de 2 jours."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-5849-834g-hvw5"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pypdf (high, avec correctif) : Déni de service sur PDF piégé : dépôt réservé aux comptes créés par Alexandre, derrière le mot de passe d'accès Caddy, session de 2 jours."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-62m5-6wh8-28x7"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pypdf (high, avec correctif) : Déni de service sur PDF piégé : dépôt réservé aux comptes créés par Alexandre, derrière le mot de passe d'accès Caddy, session de 2 jours."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-cggf-277g-3q54"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pypdf (high, avec correctif) : Déni de service sur PDF piégé : dépôt réservé aux comptes créés par Alexandre, derrière le mot de passe d'accès Caddy, session de 2 jours."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-mfr5-77xh-9j7h"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pypdf (high, avec correctif) : Déni de service sur PDF piégé : dépôt réservé aux comptes créés par Alexandre, derrière le mot de passe d'accès Caddy, session de 2 jours."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-x3rh-gjgm-fmqc"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "pypdf (high, avec correctif) : Déni de service sur PDF piégé : dépôt réservé aux comptes créés par Alexandre, derrière le mot de passe d'accès Caddy, session de 2 jours."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-jhr6-gm9c-rqjv"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "sentence-transformers (critical, avec correctif) : Aucun modèle local chargé : embeddings chez Scaleway (RAG_EMBEDDING_ENGINE=openai), OFFLINE_MODE, recherche contournée."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-63cw-57p8-fm3p"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "torch (high, avec correctif) : Aucun modèle local chargé : embeddings chez Scaleway (RAG_EMBEDDING_ENGINE=openai), OFFLINE_MODE, recherche contournée."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-xrqw-3rrv-vx5w"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "transformers (high, avec correctif) : Aucun modèle local chargé : embeddings chez Scaleway (RAG_EMBEDDING_ENGINE=openai), OFFLINE_MODE, recherche contournée."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26
+
+[[exception]]
+id = "GHSA-4mvj-m6j5-pmf7"
+type = "vulnerabilite"
+portee = "ghcr.io/open-webui/open-webui"
+raison = "unstructured (critical, avec correctif) : Partition par URL non utilisée ; dépôt limité à png, jpg, jpeg, pdf, txt, csv et ifc (RAG_ALLOWED_FILE_EXTENSIONS)."
+acceptee_par = "Alexandre"
+acceptee_le = 2026-11-26
+reexamen_le = 2026-12-26

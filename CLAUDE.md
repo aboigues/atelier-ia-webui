@@ -22,6 +22,9 @@ formations IA de Telemach Learning. Principes non négociables : `.specify/memor
   `latest`.
 - **Pas de Copilot, pas d'OpenAI, pas de « SecNumCloud »** : modèles ouverts (Mistral, Llama)
   chez Scaleway Paris uniquement.
+- **Sécurité (constitution, principe VII)** : gates GitHub bloquantes sur chaque PR (linters,
+  SAST, SCA, IaC, secrets, tests) ; actions épinglées par SHA, permissions minimales ; un
+  contrôle en échec se corrige, il ne se désactive pas. Dependabot : activation ultérieure.
 - **PR : création autorisée, merge interdit** — commit + push + `gh pr create` possibles, jamais
   `gh pr merge` : Alexandre merge lui-même. Nouvelle branche après chaque merge ; PR toujours
   vers `main`.

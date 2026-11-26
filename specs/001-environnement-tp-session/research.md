@@ -299,3 +299,9 @@ l'origine du site (point D1 de l'analyse, FR-012).
 - Restant au moment de la pause : SC-004 (connexion manuelle avec une fiche), vérification de
   l'interface derrière la `Content-Security-Policy`, export, purge et sa reprise (T042), cas
   limites (T043).
+- Fin de séance (demande d'Alexandre) : `session exporter` (6 consignes, aucun document) puis
+  `session purger` en 15 s : 7 ressources détruites, inventaire après purge à 0, dossier
+  `sessions/repetition/` supprimé, rapport `exports/repetition/rapport-purge.md`. Vérification
+  indépendante par `scw --profile telemach` : 0 instance, 0 IP, 0 application ni clé IAM
+  « atelier », 0 enregistrement DNS (SC-005). Reste pour T042 : la reprise après une purge
+  interrompue (AS 4.3). Environnement local arrêté et effacé.

@@ -155,7 +155,7 @@ Règles transverses pour toutes les tâches :
 
 - [X] T040 [US4] Écrire `outils/atelier/purge.py` (conforme à T038) et brancher `atelier session purger [--oui]` et `atelier session verifier-purge` : `tofu destroy` (relançable), inventaire par étiquette via `scw.py`, suppression de `sessions/<id>/`, rapport `exports/<id>/rapport-purge.md` ; code 1 si une ressource subsiste (FR-011, AS 4.2, AS 4.3, SC-005)
 - [X] T041 [US4] Implémenter `atelier session exporter` dans `outils/atelier/session.py` (conforme à T039) : `exports/<id>/consignes.json` et `consignes.md` (FR-010, AS 4.1)
-- [ ] T042 [US4] Terminer le scénario C de `quickstart.md` sur la session `repetition` (export, purge, interruption de la purge puis reprise, vérification `scw --profile telemach` et `git status`) et consigner le résultat dans `specs/001-environnement-tp-session/research.md` (R13)
+- [ ] T042 [US4] (En partie fait le 2026-11-26 : export et purge complète vérifiée par scw, research.md R13 ; reste la reprise après interruption.) Terminer le scénario C de `quickstart.md` sur la session `repetition` (export, purge, interruption de la purge puis reprise, vérification `scw --profile telemach` et `git status`) et consigner le résultat dans `specs/001-environnement-tp-session/research.md` (R13)
 
 **Checkpoint**: cycle complet d'une session démontré, rien ne subsiste chez Scaleway ni dans `sessions/`.
 

@@ -12,6 +12,9 @@ formations IA de Telemach Learning. Principes non négociables : `.specify/memor
   même anonymisé. Seul le jeu fictif `exemples/` est versionné. Avant chaque commit :
   `git status` et vérifier qu'aucun fichier de `sessions/`, `documents-clients/`, `exports/`
   ou `identifiants/` n'apparaît.
+- **Dépôt public : aucun nom de client** (ni dates, ni interlocuteurs) dans un fichier
+  versionné, un message de commit ou une PR ; ce contexte est dans `CLAUDE.local.md`, ignoré
+  par Git.
 - **`--profile telemach`** sur toutes les commandes `scw` (le profil par défaut pointe sur un
   autre projet).
 - **Versions** : toujours vérifier la dernière version stable (releases GitHub, registre) avant
@@ -27,7 +30,7 @@ formations IA de Telemach Learning. Principes non négociables : `.specify/memor
 
 Cycle par fonctionnalité : `/speckit-specify` -> `/speckit-clarify` (si besoin) ->
 `/speckit-plan` -> `/speckit-tasks` -> `/speckit-analyze` -> `/speckit-implement`.
-Fonctionnalité en cours : `specs/001-environnement-tp-session/` (spec rédigée, plan à faire).
+Fonctionnalité en cours : `specs/001-environnement-tp-session/` (spec et plan rédigés, tâches à générer).
 
 ## Contexte
 

@@ -160,7 +160,7 @@ versions et empreintes exactement celles de `research.md` (R1, R2).
 - [ ] T040 Exécuter `outils/securite/demonstration.sh` et les scénarios C à F de `quickstart.md` ; consigner les résultats (SC-002, SC-003, SC-005, SC-007)
 - [X] T041 [P] Mettre à jour `README.md` (section « Contrôles de sécurité » : contrôles requis, commande locale, exceptions) et `CLAUDE.md` (commande locale à lancer avant chaque push ; merge en squash ou rebase uniquement)
 - [X] T042 [P] Reporter dans `specs/001-environnement-tp-session/plan.md` (section « Phases suivantes ») l'obligation `research.md` R9 : images de `openwebui/compose.yaml` et de cloud-init épinglées par empreinte, code conforme aux six contrôles dès le premier commit
-- [ ] T043 Vérifier avant commit : `git status` sans fichier de `sessions/`, `exports/`, `identifiants/`, `documents-clients/` ; aucun emoji ni nom de client dans les fichiers ajoutés ; puis commit, push et PR vers `main` (sans merge)
+- [X] T043 Vérifier avant commit : `git status` sans fichier de `sessions/`, `exports/`, `identifiants/`, `documents-clients/` ; aucun emoji ni nom de client dans les fichiers ajoutés ; puis commit, push et PR vers `main` (sans merge)
 
 ---
 

@@ -283,3 +283,19 @@ l'origine du site (point D1 de l'analyse, FR-012).
 - Contrôle local complet (`controles-locaux.sh`, `sca` avec les images d'Open WebUI et de Caddy) :
   12 min 32 s au total pour les cinq contrôles ; `sca` au vert grâce aux exceptions datées.
   Sur la CI (PR 5) : `sca` 3,0 min, `sast-codeql` 1,3 min, les autres moins d'une minute.
+
+### Session de répétition réelle (2026-11-26, accord d'Alexandre)
+
+- `atelier session creer --session repetition --oui` : 7 ressources créées par OpenTofu en
+  3 min 47 s ; HTTPS valide, barrière d'accès active (403 sans le cookie du lien d'accès).
+- Deux échecs de configuration dus au résolveur DNS du poste (WSL) qui gardait une réponse
+  négative ou répondait par intermittence : corrigé par des tentatives espacées sur toute erreur
+  réseau du client (`openwebui.Client.requete`, `connexion`) ; la troisième relance a abouti en
+  32 s (création idempotente, comptes conservés).
+- Contrôle de bout en bout en HTTPS : toutes les étapes OK (scénario 1 en 9 s, IFC en 1 à 2 s,
+  isolement, inscription libre refusée).
+- Charge (SC-003) : 10 scénarios 1 simultanés, réponse la plus lente en 10 s, médiane 9 s
+  (limite 60 s) ; 11 fiches d'identifiants produites dans `sessions/repetition/identifiants/`.
+- Restant au moment de la pause : SC-004 (connexion manuelle avec une fiche), vérification de
+  l'interface derrière la `Content-Security-Policy`, export, purge et sa reprise (T042), cas
+  limites (T043).

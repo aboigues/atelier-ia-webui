@@ -33,7 +33,17 @@ class Client:
         # Cookie d'accès posé par Caddy en session hébergée (lien d'accès secret).
         self.cookie = cookie
 
-    def requete(self, methode, chemin, corps=None, brut=None, entetes=None):
+    def requete(self, methode, chemin, corps=None, brut=None, entetes=None, tentatives=5):
+        """Requête JSON ; erreurs réseau ou DNS passagères : nouvelles tentatives espacées."""
+        for essai in range(tentatives):
+            try:
+                return self._requete(methode, chemin, corps, brut, entetes)
+            except ErreurOpenWebUI as erreur:
+                if erreur.code is not None or essai == tentatives - 1:
+                    raise
+                time.sleep(3 * (essai + 1))
+
+    def _requete(self, methode, chemin, corps=None, brut=None, entetes=None):
         donnees = (
             brut
             if brut is not None
@@ -96,7 +106,8 @@ class Client:
                 )
                 break
             except ErreurOpenWebUI as erreur:
-                if erreur.code != 429 or essai == tentatives - 1:
+                # 429 : limite de connexions ; None : réseau ou DNS passagers (session neuve).
+                if erreur.code not in (429, None) or essai == tentatives - 1:
                     raise
                 time.sleep(5 * 2**essai)
         self.jeton = reponse["token"]

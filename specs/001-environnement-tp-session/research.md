@@ -282,3 +282,4 @@ l'origine du site (point D1 de l'analyse, FR-012).
   29,25). `verifier-purge`, `statut` et `cout` vérifiés sans rien créer.
 - Contrôle local complet (`controles-locaux.sh`, `sca` avec les images d'Open WebUI et de Caddy) :
   12 min 32 s au total pour les cinq contrôles ; `sca` au vert grâce aux exceptions datées.
+  Sur la CI (PR 5) : `sca` 3,0 min, `sast-codeql` 1,3 min, les autres moins d'une minute.

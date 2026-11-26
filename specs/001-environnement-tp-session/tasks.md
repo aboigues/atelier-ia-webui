@@ -166,7 +166,7 @@ Règles transverses pour toutes les tâches :
 - [ ] T043 Exécuter le scénario D de `quickstart.md` (clé invalide, PDF vectoriel, garde-fou sur une session de répétition à échéance courte, accès par partage de connexion) et consigner les résultats dans `specs/001-environnement-tp-session/research.md` (R13)
 - [X] T044 [P] Mettre à jour `README.md` (démarrage local, cycle d'une session, renvoi vers `specs/001-environnement-tp-session/quickstart.md`) et `CLAUDE.md` (état de la fonctionnalité 001)
 - [ ] T045 Réexaminer avant le 2026-12-26 les exceptions OpenTofu de `securite/exceptions.toml` (nouvelle version corrigée ou prolongation acceptée par Alexandre) ; relire les en-têtes `x-ratelimit-*` de Scaleway si la validation d'identité est passée et mettre à jour research.md R11
-- [ ] T046 Avant commit : `outils/securite/controles-locaux.sh` complet au vert ; `git status` sans fichier de `sessions/`, `exports/`, `identifiants/`, `documents-clients/` ; aucun emoji ni nom de client ; puis commit, push et PR vers `main` (sans merge)
+- [X] T046 Avant commit : `outils/securite/controles-locaux.sh` complet au vert ; `git status` sans fichier de `sessions/`, `exports/`, `identifiants/`, `documents-clients/` ; aucun emoji ni nom de client ; puis commit, push et PR vers `main` (sans merge)
 
 ---
 

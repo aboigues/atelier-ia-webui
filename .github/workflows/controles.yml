@@ -1,0 +1,134 @@
+# Contrôles requis sur chaque PR vers main (constitution, principe VII ;
+# specs/002-chaine-controle-securite/contracts/controles.md).
+# Règles : actions épinglées par SHA, permissions minimales, aucune condition « if: » au niveau
+# d'une tâche requise (un contrôle ignoré compterait comme réussi), outils lancés par
+# outils/securite/controle.sh avec les images figées de securite/outils.lock.
+name: Contrôles de sécurité
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read # par défaut : lecture seule pour toutes les tâches
+
+concurrency:
+  group: controles-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: lint # nom du contrôle requis par le ruleset de main
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read # lecture du dépôt uniquement
+      security-events: write # Dépôt du SARIF de zizmor dans l'onglet Sécurité (lecture seule imposée aux PR de fork).
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Linters (Python, shell, OpenTofu, YAML, workflows)
+        run: outils/securite/controle.sh lint
+        env:
+          # Jeton en lecture seule, pour les audits en ligne de zizmor (actions vulnérables).
+          GH_TOKEN: ${{ github.token }}
+      - name: Dépôt du SARIF de zizmor (sauf PR de fork)
+        if: >-
+          always() && (github.event_name != 'pull_request'
+          || github.event.pull_request.head.repo.full_name == github.repository)
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@915412ff23e8b7659517e607487dbeae018f2934 # v4.39.5
+        with:
+          sarif_file: ${{ runner.temp }}/controles-atelier/zizmor.sarif
+          category: zizmor
+
+  sast-codeql:
+    name: sast-codeql # nom du contrôle requis par le ruleset de main
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read # lecture du dépôt uniquement
+      security-events: write # Dépôt des résultats CodeQL dans l'onglet Sécurité (lecture seule imposée aux PR de fork).
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Initialisation de CodeQL
+        uses: github/codeql-action/init@915412ff23e8b7659517e607487dbeae018f2934 # v4.39.5
+        with:
+          languages: python, actions
+          build-mode: none
+          config-file: .github/codeql/codeql-config.yml
+      - name: Analyse CodeQL (sans dépôt pour une PR de fork)
+        uses: github/codeql-action/analyze@915412ff23e8b7659517e607487dbeae018f2934 # v4.39.5
+        with:
+          category: codeql
+          output: ${{ runner.temp }}/codeql-sarif
+          upload: >-
+            ${{ (github.event_name != 'pull_request'
+            || github.event.pull_request.head.repo.full_name == github.repository)
+            && 'always' || 'never' }}
+      - name: Verdict CodeQL (bloquant dans tous les cas)
+        run: python3 outils/securite/verdict_codeql.py "$RUNNER_TEMP/codeql-sarif"
+
+  sca:
+    name: sca # nom du contrôle requis par le ruleset de main
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read # lecture du dépôt uniquement
+      security-events: write # Dépôt du SARIF de Grype dans l'onglet Sécurité (lecture seule imposée aux PR de fork).
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Vulnérabilités des composants tiers
+        run: outils/securite/controle.sh sca
+      - name: Dépôt du SARIF de Grype (sauf PR de fork)
+        if: >-
+          always() && (github.event_name != 'pull_request'
+          || github.event.pull_request.head.repo.full_name == github.repository)
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@915412ff23e8b7659517e607487dbeae018f2934 # v4.39.5
+        with:
+          sarif_file: ${{ runner.temp }}/controles-atelier/sarif-sca
+          category: grype
+
+  iac:
+    name: iac # nom du contrôle requis par le ruleset de main
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Infrastructure en code (Trivy et politiques du projet)
+        run: outils/securite/controle.sh iac
+
+  secrets:
+    name: secrets # nom du contrôle requis par le ruleset de main
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # Historique complet : les secrets sont recherchés dans tous les commits.
+          fetch-depth: 0
+      - name: Détection de secrets (historique complet)
+        run: outils/securite/controle.sh secrets
+
+  tests:
+    name: tests # nom du contrôle requis par le ruleset de main
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Tests unitaires
+        run: outils/securite/controle.sh tests

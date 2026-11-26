@@ -1,0 +1,15 @@
+# Configuration de Ruff uniquement (le projet n'est pas un paquet Python installable).
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+# Fichiers tiers de Spec-Kit, copiés d'un projet externe et non modifiés ici
+# (specs/002-chaine-controle-securite/research.md, R6).
+extend-exclude = [".specify/scripts", ".claude/skills"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S"]
+
+[tool.ruff.lint.per-file-ignores]
+# assert est l'outil normal des tests unittest
+"tests/**" = ["S101"]

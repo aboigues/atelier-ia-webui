@@ -1,0 +1,30 @@
+CENTRE HOSPITALIER DE VALMONT (fictif)
+Restructuration du bloc opératoire - salles 1 à 4
+CCTP - Lot 05 - Salles propres et équipements - Extrait (phase DCE)
+
+5.3 SALLE D'OPÉRATION 3
+
+5.3.1 Classement et traitement d'air
+La zone opératoire de la salle 3 est classée ISO 5 au repos selon la norme NF S 90-351.
+Elle est équipée d'un plafond soufflant à flux unidirectionnel de dimensions minimales
+3,20 x 3,20 m, centré sur la table d'opération. La surpression de la salle par rapport
+au couloir propre est de 15 Pa minimum. Le taux de brassage est d'au moins 50 volumes/heure.
+
+5.3.2 Menuiseries
+La porte d'accès depuis le couloir propre (P3) est une porte coulissante hermétique
+automatique, passage libre de 1,40 x 2,10 m minimum, permettant le passage d'un lit.
+La porte vers le SAS patient (P1) est identique.
+
+5.3.3 Équipements suspendus
+La salle reçoit deux bras plafonniers (anesthésie et chirurgien) et un scialytique double
+coupole LED. Le bras chirurgien est positionné côté opposé au bras d'anesthésie par rapport
+à la table, à moins de 2,00 m de l'axe de celle-ci.
+
+5.3.4 Fluides médicaux
+La salle comporte au minimum quatre prises murales de fluides médicaux (O2, AIR,
+VIDE, N2O), en complément des prises équipant les bras plafonniers.
+
+5.3.5 Équipements de communication
+Un écran mural de 55 pouces et un pupitre informatique mural sont prévus. Le tableau de
+commande de salle regroupe la commande de l'ambiance (température, hygrométrie,
+éclairage) et la supervision des gaz.

@@ -1,0 +1,9 @@
+repere;designation;fabricant_reference;quantite;salle
+E01;Bras plafonnier anesthésie 2 étagères;Fournisseur X - BPA-200;1;Salle 3
+E02;Bras plafonnier chirurgien 1 étagère;Fournisseur X - BPC-100;1;Salle 3
+E03;Scialytique double coupole LED;Fournisseur Y - SCIA-LED-2;1;Salle 3
+E04;Table d'opération mobile;Fournisseur Z - TOM-500;1;Salle 3
+E06;Tableau de commande de salle;Fournisseur W - TCS-12;1;Salle 3
+E07;Écran mural 32 pouces;Fournisseur V - EM-32;1;Salle 3
+E08;Prise fluide médical murale;Fournisseur U - PFM;4;Salle 3
+E10;Lave-mains chirurgical 2 postes;Fournisseur T - LMC-2;1;SAS salle 3

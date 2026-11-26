@@ -1,0 +1,25 @@
+# Secrets et identifiants (constitution, principe V)
+.env
+.env.*
+!.env.exemple
+*.pem
+*.key
+identifiants/
+
+# Documents clients et données de session (constitution, principe I) : jamais versionnés
+sessions/
+documents-clients/
+exports/
+
+# OpenTofu
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!exemple.tfvars
+
+# Divers
+__pycache__/
+*.pyc
+.venv/
+.DS_Store

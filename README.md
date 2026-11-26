@@ -11,6 +11,27 @@ session de formation et détruite ensuite, documents compris.
 
 Le projet suit la méthode Spec-Kit (`/speckit-plan`, `/speckit-tasks`, `/speckit-implement`).
 
+## Utilisation
+
+Prérequis : Docker, Python 3.11 ou plus, `scw` configuré avec le profil `telemach`, OpenTofu
+1.13.10. Guide complet : `specs/001-environnement-tp-session/quickstart.md`.
+
+```bash
+./atelier local demarrer      # http://127.0.0.1:3000, jeu fictif et consignes chargés
+./atelier local controler     # contrôle de bout en bout
+./atelier local arreter --effacer
+
+# Session hébergée : copier exemples/session/ dans sessions/<id>/ (ignoré par Git) et l'adapter
+./atelier session cout --session <id>
+./atelier session creer --session <id>          # fiches dans sessions/<id>/identifiants/
+./atelier session controler --session <id> --charge 10
+./atelier session exporter --session <id>       # consignes, sans aucun document
+./atelier session purger --session <id>         # tout détruire, rapport dans exports/<id>/
+```
+
+Les participants ouvrent d'abord le lien d'accès de leur fiche, puis se connectent. Aucun
+document n'est conservé après la purge.
+
 ## Contrôles de sécurité
 
 Chaque PR vers `main` doit passer six contrôles bloquants (constitution, principe VII) :

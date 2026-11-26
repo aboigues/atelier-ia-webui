@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+"""Point d'entrée de la commande `atelier` (specs/001-environnement-tp-session/contracts/cli.md)."""
+
+import runpy
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent / "outils"))
+runpy.run_module("atelier", run_name="__main__", alter_sys=True)

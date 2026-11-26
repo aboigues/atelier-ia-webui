@@ -186,3 +186,122 @@ Vérifié dans `Dockerfile`, `backend/open_webui/env.py` et `config.py` au tag `
   de bout en bout = `atelier local controler` et `atelier session controler` (FR-013).
 - **Alternatives** : Bash pour la commande (logique d'API REST et de rapports trop fragile) ;
   `pytest` et `requests` (dépendances inutiles).
+
+## R13. Constats d'implémentation (2026-11-26)
+
+### Versions et empreintes (T001)
+
+Inchangées depuis le plan : Open WebUI `v0.13.5`
+(`sha256:e0dc5a8bf5c71cadf339d1e7b9408b357da75fb2854f82cad57a1609fadf2a22`), Caddy `2.11.9`
+(`sha256:4851e54a46b206517c574821bb5cc67f170d2156041e9fbc4c9193b45e84a75b`), fournisseur
+`scaleway/scaleway` `v2.93.0`.
+
+### Vulnérabilités des images (point I1 de l'analyse, traité en premier)
+
+Analyse Grype avec le verdict de la fonctionnalité 002 : 160 vulnérabilités bloquantes dans
+l'image d'Open WebUI (ffmpeg 61, node 16, curl et libcurl 24, pypdf 7, pyjwt 7, authlib 4,
+cryptography 4, etc.) et 11 dans celle de Caddy (OpenSSL et zlib d'Alpine, x/net, compress).
+Analyse de l'image d'Open WebUI : environ 8 min en local. **Décision d'Alexandre : exceptions
+et exposition réduite.** Une exception datée par vulnérabilité et par image (98 entrées, réexamen
+le 2026-12-26), chaque justification vérifiée dans l'image :
+
+- `pyjwt` : sessions HS256, algorithme explicite, secret non vide, ni PyJWK ni clé asymétrique
+  (`utils/auth.py`) ; `authlib`, `joserfc` : OAuth non configuré ;
+- `node` : absent du `PATH`, jamais lancé (seul uvicorn démarre, `start.sh`) ;
+- `curl` : seulement `HEALTHCHECK` vers `localhost` ; aucun `pycurl` ni appel de curl dans le
+  code ; aucun usage de PKCS#7, X.509, `pyarrow`, `fsspec` ;
+- `lxml` embarque sa libxml2 (2.14.6) ;
+- Caddy, binaire Go : n'utilise ni l'OpenSSL ni la zlib de l'image.
+
+Réduction d'exposition, mise en œuvre dans les tâches : audio coupé
+(`USER_PERMISSIONS_CHAT_STT`, `_TTS`, `_CALL` à `false`), dépôt limité
+(`RAG_ALLOWED_FILE_EXTENSIONS=png,jpg,jpeg,pdf,txt,csv,ifc`), mot de passe d'accès commun demandé
+par Caddy avant Open WebUI en session hébergée, en-tête `Content-Security-Policy` limité à
+l'origine du site (point D1 de l'analyse, FR-012).
+
+### API d'Open WebUI v0.13.5 (T002)
+
+- Filtre : méthode `inlet(body, __user__, __event_emitter__, ...)`, synchrone ou asynchrone ;
+  paramètres transmis selon la signature (`__event_emitter__`, `__event_call__`, `__user__`,
+  `__metadata__`, `__request__`, `__model__`, `__chat_id__`, `__message_id__`) ; pas de
+  `__files__` : les fichiers joints sont dans `body["files"]` ; lecture par
+  `await open_webui.models.files.Files.get_file_by_id(id)` puis `Storage.get_file(path)`.
+- Rattachement d'un filtre à un modèle : `meta.filterIds` du modèle.
+- Routes : `POST /api/v1/functions/create`, `/id/{id}/update`, `/id/{id}/toggle` ;
+  `POST /api/v1/models/create`, `/model/update` ; `POST /api/v1/groups/create`,
+  `/id/{id}/users/add` ; `POST /api/v1/prompts/create`, `/id/{id}/update`,
+  `/id/{id}/access/update` ; `POST /api/v1/auths/add` (`name`, `email`, `password`, `role`) ;
+  `POST /openai/config/update` (`OPENAI_API_BASE_URLS`, `OPENAI_API_KEYS`,
+  `OPENAI_API_CONFIGS`).
+- Droits : `access_grants` = liste de `{principal_type: user|group|anyone, principal_id,
+  permission: read|write}`.
+- Formulaires : `ModelForm` (`id`, `base_model_id`, `name`, `meta`, `params`,
+  `access_grants`, `is_active`), `FunctionForm` (`id`, `name`, `content`, `meta`),
+  `PromptForm` (`command`, `name`, `content`, `access_grants`), `GroupForm` (`name`,
+  `description`, `permissions`).
+- Courriels : validés par `[^@]+@[^@]+\.[^@]+` : `prenom.nom@<id>.atelier` est accepté.
+
+### Démonstration locale et maquette IFC (T017 à T024)
+
+- `atelier local demarrer` : premier démarrage environ 3 min (migrations de la base), ensuite
+  environ 1 min ; `atelier local controler` : toutes les étapes OK en 15 s (scénario 1 en 9 à
+  10 s : indice B, 9 repères sur 10, 4 portes ; IFC : SO2 et SO4 cités ; une seule destination
+  sortante, `api.scaleway.ai`).
+- Constats d'API corrigés pendant l'implémentation : les droits d'un modèle ou d'une consigne
+  s'enregistrent par les routes `/model/access/update` et `/prompts/id/{id}/access/update` ; un
+  participant ne peut utiliser un assistant que s'il a accès à son modèle de base, d'où des
+  entrées de base masquées (`meta.hidden`) lisibles par tous les comptes (`user:*`, et non
+  `anyone:*` qui vaudrait sans connexion) ; les connexions sont limitées par minute (réponse
+  429) : reprise avec attente croissante ; mot de passe d'accès HTTP (« basic ») incompatible
+  avec l'en-tête `Authorization` d'Open WebUI, remplacé par un lien d'accès secret qui pose un
+  cookie (Caddy).
+- Scénarios du jeu fictif comparés au corrigé (`CORRIGE.md`) : scénario 2, 4 écarts sur 5
+  (manque : pupitre E09 absent de la liste du négoce) ; scénario 3, une seule des deux
+  modifications non déclarées (plafond soufflant ; manque : porte P3 réduite de 1,40 à 1,20 m),
+  **comme la démo en ligne de commande du 2026-11-24** : limite du modèle, pas de
+  l'environnement. SC-002 n'est donc pas atteint sur le scénario 3 ; à montrer en atelier comme
+  exemple de contrôle humain, ou à retravailler par la consigne.
+- PDF de plan vectoriel : 0 caractère extrait, l'avertissement « exporter en PNG » est transmis
+  et le modèle ne décrit pas un contenu qu'il ne voit pas.
+
+### Session hébergée et purge (T025 à T041)
+
+- Infrastructure écrite d'après le schéma officiel du fournisseur `scaleway/scaleway` v2.93.0
+  (`tofu providers schema`), verrou `.terraform.lock.hcl` versionné ; `tofu validate`, TFLint,
+  Trivy et les politiques du projet au vert.
+- **Écart au plan : Ubuntu 26.04 LTS** (`ubuntu_resolute`, dernière LTS disponible chez Scaleway,
+  principe V) au lieu de 24.04 ; dépôt Docker disponible pour 26.04, versions figées
+  `docker-ce` 29.10.1 et `docker-compose-plugin` 5.8.0, clé du dépôt vérifiée par son empreinte
+  (`9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88`).
+- Accès : lien d'accès secret (`/acces/<jeton>`) qui pose un cookie `HttpOnly`, `Secure`,
+  `SameSite=Lax` (Strict perdrait le cookie après un lien ouvert depuis une messagerie) ;
+  en-tête `Content-Security-Policy` limité à l'origine du site.
+- Inventaire de purge : toutes les ressources sont listées puis filtrées localement par étiquette
+  ou par nom (aucun filtre côté serveur qui, mal interprété, ferait croire à une purge complète).
+- `atelier session cout` : 32,62 EUR pour 10 participants (instance 3,08 ; IP 0,29 ; modèle
+  29,25). `verifier-purge`, `statut` et `cout` vérifiés sans rien créer.
+- Contrôle local complet (`controles-locaux.sh`, `sca` avec les images d'Open WebUI et de Caddy) :
+  12 min 32 s au total pour les cinq contrôles ; `sca` au vert grâce aux exceptions datées.
+  Sur la CI (PR 5) : `sca` 3,0 min, `sast-codeql` 1,3 min, les autres moins d'une minute.
+
+### Session de répétition réelle (2026-11-26, accord d'Alexandre)
+
+- `atelier session creer --session repetition --oui` : 7 ressources créées par OpenTofu en
+  3 min 47 s ; HTTPS valide, barrière d'accès active (403 sans le cookie du lien d'accès).
+- Deux échecs de configuration dus au résolveur DNS du poste (WSL) qui gardait une réponse
+  négative ou répondait par intermittence : corrigé par des tentatives espacées sur toute erreur
+  réseau du client (`openwebui.Client.requete`, `connexion`) ; la troisième relance a abouti en
+  32 s (création idempotente, comptes conservés).
+- Contrôle de bout en bout en HTTPS : toutes les étapes OK (scénario 1 en 9 s, IFC en 1 à 2 s,
+  isolement, inscription libre refusée).
+- Charge (SC-003) : 10 scénarios 1 simultanés, réponse la plus lente en 10 s, médiane 9 s
+  (limite 60 s) ; 11 fiches d'identifiants produites dans `sessions/repetition/identifiants/`.
+- Restant au moment de la pause : SC-004 (connexion manuelle avec une fiche), vérification de
+  l'interface derrière la `Content-Security-Policy`, export, purge et sa reprise (T042), cas
+  limites (T043).
+- Fin de séance (demande d'Alexandre) : `session exporter` (6 consignes, aucun document) puis
+  `session purger` en 15 s : 7 ressources détruites, inventaire après purge à 0, dossier
+  `sessions/repetition/` supprimé, rapport `exports/repetition/rapport-purge.md`. Vérification
+  indépendante par `scw --profile telemach` : 0 instance, 0 IP, 0 application ni clé IAM
+  « atelier », 0 enregistrement DNS (SC-005). Reste pour T042 : la reprise après une purge
+  interrompue (AS 4.3). Environnement local arrêté et effacé.

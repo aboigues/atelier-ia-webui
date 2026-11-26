@@ -1,0 +1,55 @@
+# Environnement Open WebUI, identique en local et en session hébergée (constitution, principe III ;
+# contracts/configuration-openwebui.md). Images figées par empreinte (principe V, politique IaC).
+# Secrets passés par l'environnement du processus `docker compose` (outils/atelier), jamais écrits
+# dans un fichier versionné. Caddy (HTTPS, mot de passe d'accès) seulement avec le profil session ;
+# ses variables sont vérifiées par outils/atelier/session.py avant tout lancement.
+name: atelier-ia
+
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:v0.13.5@sha256:e0dc5a8bf5c71cadf339d1e7b9408b357da75fb2854f82cad57a1609fadf2a22
+    restart: unless-stopped
+    env_file: [env.commun]
+    environment:
+      OPENAI_API_BASE_URL: ${OPENAI_API_BASE_URL:?URL de l'API Scaleway manquante}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:?clé Scaleway manquante}
+      RAG_OPENAI_API_BASE_URL: ${OPENAI_API_BASE_URL:?URL de l'API Scaleway manquante}
+      RAG_OPENAI_API_KEY: ${OPENAI_API_KEY:?clé Scaleway manquante}
+      WEBUI_SECRET_KEY: ${WEBUI_SECRET_KEY:?secret de session manquant}
+      WEBUI_ADMIN_EMAIL: ${WEBUI_ADMIN_EMAIL:?courriel formateur manquant}
+      WEBUI_ADMIN_PASSWORD: ${WEBUI_ADMIN_PASSWORD:?mot de passe formateur manquant}
+      WEBUI_ADMIN_NAME: Formateur
+      WEBUI_URL: ${WEBUI_URL:-http://localhost:3000}
+      # Origines autorisées : le site lui-même seulement (pas de « * »).
+      CORS_ALLOW_ORIGIN: ${WEBUI_URL:-http://localhost:3000}
+    ports:
+      - "127.0.0.1:3000:8080"
+    volumes:
+      - donnees-openwebui:/app/backend/data
+    security_opt:
+      - no-new-privileges:true
+
+  caddy:
+    image: caddy:2.11.9@sha256:4851e54a46b206517c574821bb5cc67f170d2156041e9fbc4c9193b45e84a75b
+    profiles: [session]
+    restart: unless-stopped
+    depends_on: [openwebui]
+    environment:
+      SITE: ${SITE:-}
+      ACCES_JETON: ${ACCES_JETON:-}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-donnees:/data
+      - caddy-config:/config
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  donnees-openwebui:
+  caddy-donnees:
+  caddy-config:
